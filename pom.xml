@@ -36,7 +36,8 @@
         <openmessaging.version>0.3.1-alpha</openmessaging.version>
         <snakeyaml.version>1.32</snakeyaml.version>
         <commons-codec.version>1.13</commons-codec.version>
-        <slf4j-api.version>2.0.3</slf4j-api.version>
+        <slf4j-api.version>1.7.7</slf4j-api.version>
+        <logback.version>1.2.10</logback.version>
         <commons-validator.version>1.7</commons-validator.version>
         <concurrentlinkedhashmap-lru.version>1.4.2</concurrentlinkedhashmap-lru.version>
         <grpc.version>1.50.0</grpc.version>
@@ -45,5 +46,24 @@
         <caffeine.version>2.9.3</caffeine.version>
         <!-- dependency properties end -->
     </properties>
+
+    <dependencyManagement>
+
+        <dependencies>
+
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j-api.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
 
 </project>
