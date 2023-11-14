@@ -44,6 +44,7 @@
         <protobuf.version>3.20.1</protobuf.version>
         <disruptor.version>1.2.10</disruptor.version>
         <caffeine.version>2.9.3</caffeine.version>
+        <rocksdb.version>7.7.3</rocksdb.version>
         <!-- dependency properties end -->
     </properties>
 
@@ -57,10 +58,18 @@
                 <version>${slf4j-api.version}</version>
             </dependency>
 
+
+
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
                 <version>${logback.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.rocksdb</groupId>
+                <artifactId>rocksdbjni</artifactId>
+                <version>${rocksdb.version}</version>
             </dependency>
 
         </dependencies>
