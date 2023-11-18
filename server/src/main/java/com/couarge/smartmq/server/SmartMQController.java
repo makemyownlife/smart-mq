@@ -7,7 +7,13 @@ public class SmartMQController {
 
     private final static Logger logger = LoggerFactory.getLogger(SmartMQController.class);
 
+    public void start() {
+
+    }
+
+    public void shutdown(){
 
 
+    }
 
 }
