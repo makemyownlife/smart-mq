@@ -10,13 +10,12 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>client</module>
         <module>common</module>
         <module>remoting</module>
-        <module>example</module>
-        <module>delay</module>
-        <module>client</module>
-        <module>server</module>
         <module>store</module>
+        <module>server</module>
+        <module>example</module>
     </modules>
 
     <properties>
