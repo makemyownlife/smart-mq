@@ -10,11 +10,11 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>client</module>
         <module>common</module>
+        <module>client</module>
         <module>remoting</module>
         <module>store</module>
-        <module>server</module>
+        <module>broker</module>
         <module>example</module>
     </modules>
 
@@ -33,7 +33,7 @@
         <guava.version>31.1-jre</guava.version>
         <gson.version>2.9.0</gson.version>
         <openmessaging.version>0.3.1-alpha</openmessaging.version>
-        <snakeyaml.version>1.32</snakeyaml.version>
+        <snakeyaml.version>2.2</snakeyaml.version>
         <commons-codec.version>1.13</commons-codec.version>
         <slf4j-api.version>1.7.7</slf4j-api.version>
         <logback.version>1.2.10</logback.version>
@@ -57,8 +57,6 @@
                 <version>${slf4j-api.version}</version>
             </dependency>
 
-
-
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
@@ -69,6 +67,12 @@
                 <groupId>org.rocksdb</groupId>
                 <artifactId>rocksdbjni</artifactId>
                 <version>${rocksdb.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.yaml</groupId>
+                <artifactId>snakeyaml</artifactId>
+                <version>${snakeyaml.version}</version>
             </dependency>
 
         </dependencies>
