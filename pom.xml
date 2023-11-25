@@ -44,6 +44,7 @@
         <disruptor.version>1.2.10</disruptor.version>
         <caffeine.version>2.9.3</caffeine.version>
         <rocksdb.version>7.7.3</rocksdb.version>
+        <curator.version>4.3.0</curator.version>
         <!-- dependency properties end -->
     </properties>
 
@@ -73,6 +74,25 @@
                 <groupId>org.yaml</groupId>
                 <artifactId>snakeyaml</artifactId>
                 <version>${snakeyaml.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.curator</groupId>
+                <artifactId>curator-framework</artifactId>
+                <version>${curator.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.curator</groupId>
+                <artifactId>curator-recipes</artifactId>
+                <version>${curator.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.curator</groupId>
+                <artifactId>curator-test</artifactId>
+                <version>${curator.version}</version>
+                <scope>test</scope>
             </dependency>
 
         </dependencies>
