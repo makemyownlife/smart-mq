@@ -24,6 +24,12 @@
             <artifactId>rocksdbjni</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.couarge.smartmq</groupId>
+            <artifactId>smart-mq-common</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+
     </dependencies>
 
 </project>
