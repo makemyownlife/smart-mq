@@ -1,0 +1,1 @@
+package com.couarge.smartmq.adapter.rocketmq;

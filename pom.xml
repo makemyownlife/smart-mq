@@ -10,12 +10,20 @@
     <packaging>pom</packaging>
 
     <modules>
+        <!--基础包 -->
         <module>common</module>
+        <!-- 客户端 -->
         <module>client</module>
+        <!-- 通讯框架 -->
         <module>remoting</module>
+        <!-- 存储模块 -->
         <module>store</module>
+        <!-- MQ 服务端 -->
         <module>broker</module>
+        <!--  例子 -->
         <module>example</module>
+        <!--  适配器(rocketmq / kafka ) -->
+        <module>adapter</module>
     </modules>
 
     <properties>

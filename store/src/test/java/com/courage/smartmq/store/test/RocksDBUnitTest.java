@@ -1,5 +1,6 @@
 package com.courage.smartmq.store.test;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.rocksdb.RocksDB;
 import org.slf4j.Logger;
@@ -13,6 +14,9 @@ public class RocksDBUnitTest {
         RocksDB.loadLibrary();
     }
 
-    
+    @BeforeClass
+    public void createDatabase() {
+
+    }
 
 }
