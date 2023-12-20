@@ -1,0 +1,1 @@
+rocketmq=com.couarge.smartmq.adapter.rocketmq.consumer.SmartMQRocketMQConsumer
