@@ -17,7 +17,7 @@ public class SmartMQController {
         // 4. 读取两种 standalone 独立运行模式，还是 zookeeper 高可用模式。
         // 5. 若是 standalone 模式，直接启动适配器消费者服务。
         // 6. 若是 zookeeper 高可用模式， 通过zk节点抢占锁 ，抢占成功，则启动消费者服务。
-        // 7. 若master宕机，
+        // 7. 若 master 宕机 ，Slave 角色会尝试抢占M aster 节点 ，抢占成功后，会自动启动消费者服务。
     }
 
     public void shutdown() {
