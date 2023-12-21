@@ -12,4 +12,5 @@ public @interface SPI {
 
     // Default SPI name
     String value() default "";
+
 }
