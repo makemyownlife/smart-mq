@@ -4,11 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *  使用 RocksDB 做为延迟消息的存储容器
+ *  参考消息队列 QMQ 自定义延迟消息存储
  */
-public class RocksDBMessageStore implements MessageStore {
+public class SwiftMessageStore implements MessageStore {
 
-    private final static Logger logger = LoggerFactory.getLogger(RocksDBMessageStore.class);
+    private final static Logger logger = LoggerFactory.getLogger(SwiftMessageStore.class);
 
     @Override
     public boolean load() {
