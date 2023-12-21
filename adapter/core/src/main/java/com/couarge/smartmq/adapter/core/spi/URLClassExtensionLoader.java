@@ -6,6 +6,9 @@ import java.net.URLClassLoader;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
 
+/**
+ * 从指定的 URL 加载类文件。
+ */
 public class URLClassExtensionLoader extends URLClassLoader {
 
     public URLClassExtensionLoader(URL[] urls) {
@@ -18,7 +21,6 @@ public class URLClassExtensionLoader extends URLClassLoader {
         if (c != null) {
             return c;
         }
-
         if (name.startsWith("java.") || name.startsWith("org.slf4j.") || name.startsWith("org.apache.logging")
                 || name.startsWith("org.apache.zookeeper.") || name.startsWith("org.I0Itec.zkclient.")
                 || name.startsWith("org.apache.commons.logging.")) {
