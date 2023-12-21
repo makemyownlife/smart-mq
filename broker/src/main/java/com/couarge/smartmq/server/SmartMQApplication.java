@@ -14,7 +14,11 @@ public class SmartMQApplication {
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             @Override
             public void run() {
-                smartMQController.shutdown();
+                try {
+                    smartMQController.shutdown();
+                } catch (Throwable e) {
+                    logger.error("smartMQController shutdown error: ", e);
+                }
             }
         }));
         logger.info("结束启动SmartMQ服务,耗时：" + (System.currentTimeMillis() - start) + "毫秒");
