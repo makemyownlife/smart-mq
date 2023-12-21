@@ -3,6 +3,9 @@ package com.couarge.smartmq.server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * SmartMQ控制器
+ */
 public class SmartMQController {
 
     private final static Logger logger = LoggerFactory.getLogger(SmartMQController.class);
@@ -14,6 +17,7 @@ public class SmartMQController {
         // 4. 读取两种 standalone 独立运行模式，还是 zookeeper 高可用模式。
         // 5. 若是 standalone 模式，直接启动适配器消费者服务。
         // 6. 若是 zookeeper 高可用模式， 通过zk节点抢占锁 ，抢占成功，则启动消费者服务。
+        // 7. 若master宕机，
     }
 
     public void shutdown() {
