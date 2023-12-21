@@ -11,6 +11,12 @@ public class SmartMQApplication {
         logger.info("开始启动SmartMQ服务");
         SmartMQController smartMQController = new SmartMQController();
         smartMQController.start();
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            @Override
+            public void run() {
+                smartMQController.shutdown();
+            }
+        }));
         logger.info("结束启动SmartMQ服务,耗时：" + (System.currentTimeMillis() - start) + "毫秒");
     }
 
