@@ -1,5 +1,7 @@
 package com.couarge.smartmq.store;
 
+import org.rocksdb.RocksDBException;
+
 public interface MessageStore {
 
     /**
