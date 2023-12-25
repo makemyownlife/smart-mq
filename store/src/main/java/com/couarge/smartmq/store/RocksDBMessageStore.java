@@ -27,6 +27,7 @@ public class RocksDBMessageStore implements MessageStore {
 
     @Override
     public synchronized boolean load() {
+        boolean result = true;
         try {
             RocksDB.loadLibrary();
             File file = new File(storeDir);
@@ -38,8 +39,9 @@ public class RocksDBMessageStore implements MessageStore {
             return true;
         } catch (Exception e) {
             logger.error("load error:", e);
-            return false;
+            result = false;
         }
+        return result;
     }
 
     @Override
