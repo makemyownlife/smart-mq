@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.courage.smartmq</groupId>
+        <groupId>cn.itcourage.smartmq</groupId>
         <artifactId>smart-mq-all</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
@@ -21,19 +21,19 @@
     <dependencies>
 
         <dependency>
-            <groupId>com.courage.smartmq</groupId>
+            <groupId>cn.itcourage.smartmq</groupId>
             <artifactId>smart-mq-common</artifactId>
             <version>${parent.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.courage.smartmq</groupId>
+            <groupId>cn.itcourage.smartmq</groupId>
             <artifactId>smart-mq-store</artifactId>
             <version>${parent.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.courage.smartmq</groupId>
+            <groupId>cn.itcourage.smartmq</groupId>
             <artifactId>smart-mq-client</artifactId>
             <version>${parent.version}</version>
         </dependency>
@@ -59,13 +59,13 @@
 
         <!-- 适配器依赖 start  -->
         <dependency>
-            <groupId>com.courage.smartmq</groupId>
+            <groupId>cn.itcourage.smartmq</groupId>
             <artifactId>smart-mq-adapter.core</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.courage.smartmq</groupId>
+            <groupId>cn.itcourage.smartmq</groupId>
             <artifactId>smart-mq-adapter.rocketmq</artifactId>
             <version>${project.parent.version}</version>
             <exclusions>
@@ -79,7 +79,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.courage.smartmq</groupId>
+            <groupId>cn.itcourage.smartmq</groupId>
             <artifactId>smart-mq-adapter.kafka</artifactId>
             <version>${project.parent.version}</version>
             <exclusions>
@@ -144,7 +144,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.courage.smartmq.broker.SmartMQApplication</mainClass>
+                            <mainClass>cn.itcourage.smartmq.broker.SmartMQApplication</mainClass>
                         </manifest>
                     </archive>
                     <excludes>

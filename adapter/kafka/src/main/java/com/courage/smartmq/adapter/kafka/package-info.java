@@ -1,1 +1,0 @@
-package com.courage.smartmq.adapter.kafka;

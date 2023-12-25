@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.courage.smartmq</groupId>
+        <groupId>cn.itcourage.smartmq</groupId>
         <artifactId>smart-mq-adapter</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
