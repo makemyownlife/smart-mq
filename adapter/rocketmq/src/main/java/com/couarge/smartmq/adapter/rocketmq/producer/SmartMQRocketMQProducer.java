@@ -11,12 +11,10 @@ public class SmartMQRocketMQProducer implements SmartMQProducer {
     public void init(Properties properties) {
 
     }
-
     @Override
     public void start() {
 
     }
-
     @Override
     public void stop() {
 
