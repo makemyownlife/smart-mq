@@ -22,8 +22,8 @@ public class SmartMQController {
     private void initialize() {
         // 1. 启动本地存储
         MessageStoreConfig messageStoreConfig = new MessageStoreConfig();
-        MessageStore messageStore = new RocksDBMessageStore(messageStoreConfig);
-        messageStore.load();
+        this.messageStore = new RocksDBMessageStore(messageStoreConfig);
+        this.messageStore.load();
     }
 
     // 1. 启动本地存储。

@@ -3,7 +3,6 @@ package com.couarge.smartmq.store;
 import com.couarge.smartmq.store.config.MessageStoreConfig;
 import org.rocksdb.Options;
 import org.rocksdb.RocksDB;
-import org.rocksdb.RocksDBException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +26,7 @@ public class RocksDBMessageStore implements MessageStore {
     }
 
     @Override
-    public boolean load() {
+    public synchronized boolean load() {
         try {
             RocksDB.loadLibrary();
             File file = new File(storeDir);
@@ -45,7 +44,10 @@ public class RocksDBMessageStore implements MessageStore {
 
     @Override
     public void start() throws Exception {
-
+        this.rocksDB.put("hello".getBytes(), "courqge".getBytes());
+        byte[] valueBytes = this.rocksDB.get("hello".getBytes());
+        String value = new String(valueBytes);
+        logger.info("value:" + value);
     }
 
     @Override
