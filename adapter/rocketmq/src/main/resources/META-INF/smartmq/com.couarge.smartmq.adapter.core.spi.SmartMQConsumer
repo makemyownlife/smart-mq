@@ -1,1 +1,1 @@
-rocketmq=com.couarge.smartmq.adapter.rocketmq.consumer.SmartMQRocketMQConsumer
+rocketmq=com.courage.smartmq.adapter.rocketmq.consumer.SmartMQRocketMQConsumer

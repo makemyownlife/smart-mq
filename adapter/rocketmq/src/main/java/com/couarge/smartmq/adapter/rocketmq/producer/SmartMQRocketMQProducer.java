@@ -1,7 +1,6 @@
-package com.couarge.smartmq.adapter.rocketmq.producer;
+package com.courage.smartmq.adapter.rocketmq.producer;
 
-import com.couarge.smartmq.adapter.core.spi.SmartMQConsumer;
-import com.couarge.smartmq.adapter.core.spi.SmartMQProducer;
+import com.courage.smartmq.adapter.core.spi.SmartMQProducer;
 
 import java.util.Properties;
 

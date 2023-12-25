@@ -1,1 +1,0 @@
-package com.couarge.smartmq.adapter.core;

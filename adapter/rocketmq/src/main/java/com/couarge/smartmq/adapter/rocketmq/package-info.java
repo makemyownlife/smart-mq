@@ -1,1 +1,1 @@
-package com.couarge.smartmq.adapter.rocketmq;
+package com.courage.smartmq.adapter.rocketmq;

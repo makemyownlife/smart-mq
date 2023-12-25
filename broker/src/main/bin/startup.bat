@@ -16,7 +16,7 @@ set ADAPTER_OPTS= -DappName=smart-mq-broker
 
 set JAVA_OPTS= %JAVA_MEM_OPTS% %JAVA_OPTS_EXT% %ADAPTER_OPTS%
 
-set CMD_STR= java %JAVA_OPTS% -classpath "%CLASSPATH%" com.couarge.smartmq.broker.SmartMQApplication
+set CMD_STR= java %JAVA_OPTS% -classpath "%CLASSPATH%" com.courage.smartmq.broker.SmartMQApplication
 echo start cmd : %CMD_STR%
 
-java %JAVA_OPTS% -classpath "%CLASSPATH%" com.couarge.smartmq.broker.SmartMQApplication
+java %JAVA_OPTS% -classpath "%CLASSPATH%" com.courage.smartmq.broker.SmartMQApplication

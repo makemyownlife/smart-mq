@@ -4,12 +4,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.couarge.smartmq</groupId>
+        <groupId>com.courage.smartmq</groupId>
         <artifactId>smart-mq-all</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.couarge</groupId>
     <artifactId>smart-mq-adapter</artifactId>
 
     <packaging>pom</packaging>
@@ -25,7 +24,6 @@
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
 
 
 </project>

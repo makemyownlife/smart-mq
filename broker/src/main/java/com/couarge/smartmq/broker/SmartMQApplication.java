@@ -1,4 +1,4 @@
-package com.couarge.smartmq.broker;
+package com.courage.smartmq.broker;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

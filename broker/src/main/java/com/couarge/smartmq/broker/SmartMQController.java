@@ -1,8 +1,8 @@
-package com.couarge.smartmq.broker;
+package com.courage.smartmq.broker;
 
-import com.couarge.smartmq.store.MessageStore;
-import com.couarge.smartmq.store.RocksDBMessageStore;
-import com.couarge.smartmq.store.config.MessageStoreConfig;
+import com.courage.smartmq.store.MessageStore;
+import com.courage.smartmq.store.RocksDBMessageStore;
+import com.courage.smartmq.store.config.MessageStoreConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
