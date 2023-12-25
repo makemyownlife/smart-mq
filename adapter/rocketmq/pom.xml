@@ -15,6 +15,7 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <rocketmq_version>4.9.4</rocketmq_version>
     </properties>
 
     <dependencies>
@@ -24,6 +25,13 @@
             <artifactId>smart-mq-adapter.core</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- RocketMQ Client 依赖 -->
+        <dependency>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-client</artifactId>
+            <version>${rocketmq_version}</version>
         </dependency>
 
     </dependencies>
