@@ -1,4 +1,4 @@
-package com.couarge.smartmq.server;
+package com.couarge.smartmq.broker;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 public class SmartMQApplication {
     private final static Logger logger = LoggerFactory.getLogger(SmartMQApplication.class);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         long start = System.currentTimeMillis();
         logger.info("开始启动SmartMQ服务");
         SmartMQController smartMQController = new SmartMQController();

@@ -28,6 +28,12 @@
 
         <dependency>
             <groupId>com.couarge.smartmq</groupId>
+            <artifactId>smart-mq-store</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.couarge.smartmq</groupId>
             <artifactId>smart-mq-client</artifactId>
             <version>${parent.version}</version>
         </dependency>
@@ -47,6 +53,7 @@
             <groupId>org.apache.curator</groupId>
             <artifactId>curator-recipes</artifactId>
         </dependency>
+
         <!-- zookeeper client end -->
 
     </dependencies>
