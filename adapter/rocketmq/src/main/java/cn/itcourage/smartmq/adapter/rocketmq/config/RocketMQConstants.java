@@ -1,0 +1,15 @@
+package cn.itcourage.smartmq.adapter.rocketmq.config;
+
+/**
+ * Created by zhangyong on 2023/12/26.
+ */
+public class RocketMQConstants {
+
+
+    public static final String ROOT                                  = "rocketmq";
+
+    public static final String ROCKETMQ_NAMESRV_ADDR                 = ROOT + "." + "namesrv.addr";
+
+    public static final String ROCKETMQ_BATCH_SIZE                   = ROOT + "." + "batch.size";
+
+}

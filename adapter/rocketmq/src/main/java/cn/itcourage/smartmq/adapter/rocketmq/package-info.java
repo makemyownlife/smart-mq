@@ -1,1 +1,0 @@
-package cn.itcourage.smartmq.adapter.rocketmq;

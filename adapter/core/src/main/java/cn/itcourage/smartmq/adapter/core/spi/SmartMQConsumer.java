@@ -4,7 +4,7 @@ import java.util.Properties;
 
 public interface SmartMQConsumer {
 
-    void init(Properties properties, String topic, String group);
+    void init(Properties properties, String topic, String groupName);
 
     void start();
 
