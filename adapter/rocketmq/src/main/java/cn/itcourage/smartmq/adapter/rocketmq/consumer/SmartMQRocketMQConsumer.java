@@ -38,7 +38,7 @@ public class SmartMQRocketMQConsumer implements SmartMQConsumer {
 
     @Override
     public void start() {
-
+        
     }
 
     @Override
