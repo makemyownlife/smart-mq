@@ -5,6 +5,7 @@ import cn.itcourage.smartmq.adapter.core.spi.SmartMQConsumer;
 import cn.itcourage.smartmq.adapter.rocketmq.config.RocketMQConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
+import org.apache.rocketmq.client.consumer.rebalance.AllocateMessageQueueAveragely;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +24,7 @@ public class SmartMQRocketMQConsumer implements SmartMQConsumer {
 
     private Integer                                            batchSize;
 
-    private DefaultMQPushConsumer rocketMQConsumer;
+    private DefaultMQPushConsumer                              rocketMQConsumer;
 
     @Override
     public void init(Properties properties, String topic, String groupName) {
@@ -38,7 +39,7 @@ public class SmartMQRocketMQConsumer implements SmartMQConsumer {
 
     @Override
     public void start() {
-        
+        rocketMQConsumer = new DefaultMQPushConsumer(groupName);
     }
 
     @Override
