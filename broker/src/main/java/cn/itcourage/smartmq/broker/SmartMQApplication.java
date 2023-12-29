@@ -9,7 +9,8 @@ public class SmartMQApplication {
     public static void main(String[] args) throws Exception {
         long start = System.currentTimeMillis();
         logger.info("开始启动SmartMQ服务");
-        SmartMQController smartMQController = new SmartMQController();
+        SmartMQConfig smartMQConfig = new SmartMQConfig();
+        SmartMQController smartMQController = new SmartMQController(smartMQConfig);
         smartMQController.start();
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             @Override
