@@ -8,7 +8,7 @@ import cn.itcourage.smartmq.broker.SmartMQConfig;
 /**
  * 适配器引擎(初始化，启动，关闭适配器)
  */
-public class AdapterEngine {
+public class AdapterHolder {
 
     private static final String CONNECTOR_SPI_DIR = "/plugin";
 
@@ -16,26 +16,38 @@ public class AdapterEngine {
 
     private SmartMQConfig smartMQConfig;
 
-    private SmartMQProducer currentMQProducer;
+    private SmartMQProducer producer;
 
-    private SmartMQConsumer currentMQConsumer;
+    private SmartMQConsumer consumer;
 
-    public AdapterEngine(SmartMQConfig smartMQConfig) {
+    public AdapterHolder(SmartMQConfig smartMQConfig) {
         this.smartMQConfig = smartMQConfig;
     }
 
     public synchronized void start() {
-        this.currentMQProducer = startProducer();
-        this.currentMQConsumer = startConsumer();
+        this.producer = startProducer();
+        this.consumer = startConsumer();
     }
+
+    public synchronized void stop() {
+        shutdownMQConsumer();
+        shutdownMQProducer();
+    }
+
+    //======================================================== get method start   ========================================================
+    public SmartMQProducer getProducer() {
+        return producer;
+    }
+
+    public SmartMQConsumer getConsumer() {
+        return consumer;
+    }
+
+    //======================================================== get method end   ========================================================
 
     private SmartMQProducer startProducer() {
         ExtensionLoader<SmartMQProducer> loader = ExtensionLoader.getExtensionLoader(SmartMQProducer.class);
-        SmartMQProducer smartMQProducer = loader.getExtension(
-                smartMQConfig.getMqType(),
-                CONNECTOR_SPI_DIR,
-                CONNECTOR_STANDBY_SPI_DIR
-        );
+        SmartMQProducer smartMQProducer = loader.getExtension(smartMQConfig.getMqType(), CONNECTOR_SPI_DIR, CONNECTOR_STANDBY_SPI_DIR);
         if (smartMQProducer != null) {
             smartMQProducer.init(smartMQConfig.getProducerProperties());
         }
@@ -44,19 +56,11 @@ public class AdapterEngine {
 
     private SmartMQConsumer startConsumer() {
         ExtensionLoader<SmartMQConsumer> loader = ExtensionLoader.getExtensionLoader(SmartMQConsumer.class);
-        SmartMQConsumer smartMQConsumer = loader.getExtension(
-                smartMQConfig.getMqType(),
-                CONNECTOR_SPI_DIR,
-                CONNECTOR_STANDBY_SPI_DIR
-        );
+        SmartMQConsumer smartMQConsumer = loader.getExtension(smartMQConfig.getMqType(), CONNECTOR_SPI_DIR, CONNECTOR_STANDBY_SPI_DIR);
         if (smartMQConsumer != null) {
             ClassLoader cl = Thread.currentThread().getContextClassLoader();
             Thread.currentThread().setContextClassLoader(smartMQConsumer.getClass().getClassLoader());
-            smartMQConsumer.init(
-                    smartMQConfig.getConsumerProperties(),
-                    smartMQConfig.getTopic(),
-                    smartMQConfig.getGroupName()
-            );
+            smartMQConsumer.init(smartMQConfig.getConsumerProperties(), smartMQConfig.getTopic(), smartMQConfig.getGroupName());
             smartMQConsumer.start();
             Thread.currentThread().setContextClassLoader(cl);
         }
@@ -64,20 +68,17 @@ public class AdapterEngine {
     }
 
     private void shutdownMQConsumer() {
-        if (this.currentMQConsumer != null) {
-            this.currentMQConsumer.stop();
+        if (this.consumer != null) {
+            this.consumer.stop();
         }
     }
 
     private void shutdownMQProducer() {
-        if (this.currentMQProducer != null) {
-            this.currentMQProducer.stop();
+        if (this.producer != null) {
+            this.producer.stop();
         }
     }
 
-    public void shutdown() {
-        shutdownMQConsumer();
-        shutdownMQProducer();
-    }
+
 
 }

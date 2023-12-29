@@ -1,6 +1,6 @@
 package cn.itcourage.smartmq.broker;
 
-import cn.itcourage.smartmq.broker.support.AdapterEngine;
+import cn.itcourage.smartmq.broker.support.AdapterHolder;
 import cn.itcourage.smartmq.store.MessageStore;
 import cn.itcourage.smartmq.store.RocksDBMessageStore;
 import cn.itcourage.smartmq.store.config.MessageStoreConfig;
@@ -20,7 +20,7 @@ public class SmartMQController {
 
     private MessageStore messageStore;
 
-    private AdapterEngine adapterEngine;
+    private AdapterHolder adapterHolder;
 
     private SmartMQConfig smartMQConfig;
 
@@ -36,7 +36,7 @@ public class SmartMQController {
         this.messageStore.load();
         this.messageStore.start();
         // 3. 初始化适配器对象
-        this.adapterEngine = new AdapterEngine(this.smartMQConfig);
+        this.adapterHolder = new AdapterHolder(this.smartMQConfig);
     }
 
     //============================================================ get 方法  start ============================================================
@@ -54,8 +54,8 @@ public class SmartMQController {
         if (this.messageStore != null) {
             this.messageStore.shutdown();
         }
-        if (this.adapterEngine != null) {
-            this.adapterEngine.shutdown();
+        if (this.adapterHolder != null) {
+            this.adapterHolder.stop();
         }
     }
 
