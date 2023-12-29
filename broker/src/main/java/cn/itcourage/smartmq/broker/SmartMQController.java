@@ -54,6 +54,9 @@ public class SmartMQController {
         if (this.messageStore != null) {
             this.messageStore.shutdown();
         }
+        if (this.adapterEngine != null) {
+            this.adapterEngine.shutdown();
+        }
     }
 
 }

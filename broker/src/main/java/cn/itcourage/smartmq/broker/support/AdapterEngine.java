@@ -63,21 +63,21 @@ public class AdapterEngine {
         return smartMQConsumer;
     }
 
-    public void stopMQConsumer() {
+    private void shutdownMQConsumer() {
         if (this.currentMQConsumer != null) {
             this.currentMQConsumer.stop();
         }
     }
 
-    public void stopMQProducer() {
+    private void shutdownMQProducer() {
         if (this.currentMQProducer != null) {
             this.currentMQProducer.stop();
         }
     }
 
-    public void stop() {
-        stopMQConsumer();
-        stopMQProducer();
+    public void shutdown() {
+        shutdownMQConsumer();
+        shutdownMQProducer();
     }
 
 }
