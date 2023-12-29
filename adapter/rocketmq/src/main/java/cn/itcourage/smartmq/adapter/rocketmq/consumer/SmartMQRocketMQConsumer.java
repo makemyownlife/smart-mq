@@ -28,7 +28,7 @@ public class SmartMQRocketMQConsumer implements SmartMQConsumer {
 
     private long batchProcessTimeout = 60 * 1000;
 
-    private int consumeThreadMax = 8;
+    private int consumeThread = 8;
 
     private DefaultMQPushConsumer rocketMQConsumer;
 
@@ -55,9 +55,9 @@ public class SmartMQRocketMQConsumer implements SmartMQConsumer {
         if (StringUtils.isNotEmpty(batchSize)) {
             this.batchSize = Integer.parseInt(batchSize);
         }
-        String maxThreadSize = properties.getProperty(RocketMQConstants.ROCKETMQ_CONSUME_THREAD_MAX);
+        String maxThreadSize = properties.getProperty(RocketMQConstants.ROCKETMQ_CONSUME_THREAD_COUNT);
         if (StringUtils.isNotEmpty(maxThreadSize)) {
-            this.consumeThreadMax = Integer.parseInt(maxThreadSize);
+            this.consumeThread = Integer.parseInt(maxThreadSize);
         }
     }
 
@@ -73,7 +73,8 @@ public class SmartMQRocketMQConsumer implements SmartMQConsumer {
         if (batchSize != -1) {
             rocketMQConsumer.setConsumeMessageBatchMaxSize(batchSize);
         }
-        rocketMQConsumer.setConsumeThreadMax(consumeThreadMax);
+        rocketMQConsumer.setConsumeThreadMax(consumeThread);
+        rocketMQConsumer.setConsumeThreadMin(consumeThread);
         try {
             rocketMQConsumer.subscribe(topic, filter);
             rocketMQConsumer.registerMessageListener((MessageListenerOrderly) (messageExts, context) -> {
