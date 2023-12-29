@@ -65,8 +65,8 @@ public class SmartMQController {
             properties.put(RocketMQConstants.ROCKETMQ_NAMESRV_ADDR, "192.168.1.9:9876");
             Thread.currentThread().setContextClassLoader(smartMQConsumer.getClass().getClassLoader());
             this.smartMQConsumer.init(properties, "mytest", "smartMQConsumer");
-            Thread.currentThread().setContextClassLoader(cl);
             this.smartMQConsumer.start();
+            Thread.currentThread().setContextClassLoader(cl);
         }
     }
 

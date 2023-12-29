@@ -38,7 +38,7 @@ public class SmartMQRocketMQConsumer implements SmartMQConsumer {
 
     private String groupName;
 
-    private Integer batchSize;
+    private int batchSize = -1;
 
     private String namespace;
 
