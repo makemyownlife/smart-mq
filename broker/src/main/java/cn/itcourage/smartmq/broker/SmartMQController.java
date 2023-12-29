@@ -29,23 +29,6 @@ public class SmartMQController {
 
     private SmartMQProducer smartMQProducer;
 
-    public SmartMQController() {
-        initialize();
-    }
-
-    private synchronized void initialize() {
-        // 1. 初始化本地存储
-        MessageStoreConfig messageStoreConfig = new MessageStoreConfig();
-        this.messageStore = new RocksDBMessageStore(messageStoreConfig);
-        this.messageStore.load();
-        // 2. 初始化适配器对象
-        ExtensionLoader<SmartMQConsumer> loader = ExtensionLoader.getExtensionLoader(SmartMQConsumer.class);
-        this.smartMQConsumer = loader.getExtension("rocketmq", CONNECTOR_SPI_DIR, CONNECTOR_STANDBY_SPI_DIR);
-        Properties properties = new Properties();
-        properties.put(RocketMQConstants.ROCKETMQ_NAMESRV_ADDR, "192.168.1.9:9876");
-        this.smartMQConsumer.init(properties, "mytest", "smartMQConsumer");
-    }
-
     // 1. 启动本地存储。
     // 2. 启动 RPC 服务，支持通过RPC查询保存新的消息。
     // 3. 初始化适配器对象(Kafka/RocketMQ)。
@@ -53,11 +36,36 @@ public class SmartMQController {
     // 5. 若是 standalone 模式，直接启动适配器消费者服务。
     // 6. 若是 zookeeper 高可用模式， 通过zk节点抢占锁 ，抢占成功，则启动消费者服务。
     // 7. 若 master 宕机 ，Slave 角色会尝试抢占M aster 节点 ，抢占成功后，会自动启动消费者服务。
-    public void start() throws Exception {
+    public synchronized void start() throws Exception {
+        // 1. 初始化本地存储
+        startMessageStore();
+        // 3. 初始化适配器对象
+        startAdapter();
+    }
+
+    public void startMessageStore() throws Exception {
+        MessageStoreConfig messageStoreConfig = new MessageStoreConfig();
+        this.messageStore = new RocksDBMessageStore(messageStoreConfig);
+        this.messageStore.load();
+        this.messageStore.start();
+    }
+
+    public void shutdownMessageStore() {
         if (this.messageStore != null) {
-            this.messageStore.start();
+            this.messageStore.shutdown();
         }
+    }
+
+    private void startAdapter() {
+        ExtensionLoader<SmartMQConsumer> loader = ExtensionLoader.getExtensionLoader(SmartMQConsumer.class);
+        this.smartMQConsumer = loader.getExtension("rocketmq", CONNECTOR_SPI_DIR, CONNECTOR_STANDBY_SPI_DIR);
         if (this.smartMQConsumer != null) {
+            ClassLoader cl = Thread.currentThread().getContextClassLoader();
+            Properties properties = new Properties();
+            properties.put(RocketMQConstants.ROCKETMQ_NAMESRV_ADDR, "192.168.1.9:9876");
+            Thread.currentThread().setContextClassLoader(smartMQConsumer.getClass().getClassLoader());
+            this.smartMQConsumer.init(properties, "mytest", "smartMQConsumer");
+            Thread.currentThread().setContextClassLoader(cl);
             this.smartMQConsumer.start();
         }
     }
@@ -67,10 +75,8 @@ public class SmartMQController {
     //3.关闭适配器消费者服务。
     //4.关闭RPC服务。
     //5.关闭本地存储
-    public void shutdown() throws Exception {
-        if (this.messageStore != null) {
-            this.messageStore.shutdown();
-        }
+    public synchronized void shutdown() throws Exception {
+        shutdownMessageStore();
     }
 
 }

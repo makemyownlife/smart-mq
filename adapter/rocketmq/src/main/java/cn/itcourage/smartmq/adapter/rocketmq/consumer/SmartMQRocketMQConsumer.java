@@ -28,6 +28,8 @@ public class SmartMQRocketMQConsumer implements SmartMQConsumer {
 
     private long batchProcessTimeout = 60 * 1000;
 
+    private int consumeThreadMax = 8;
+
     private DefaultMQPushConsumer rocketMQConsumer;
 
     private String nameServer;
@@ -53,13 +55,17 @@ public class SmartMQRocketMQConsumer implements SmartMQConsumer {
         if (StringUtils.isNotEmpty(batchSize)) {
             this.batchSize = Integer.parseInt(batchSize);
         }
+        String maxThreadSize = properties.getProperty(RocketMQConstants.ROCKETMQ_CONSUME_THREAD_MAX);
+        if (StringUtils.isNotEmpty(maxThreadSize)) {
+            this.consumeThreadMax = Integer.parseInt(maxThreadSize);
+        }
     }
 
     @Override
     public synchronized void start() {
         rocketMQConsumer = new DefaultMQPushConsumer(groupName);
-        if (!StringUtils.isEmpty(this.namespace)) {
-            rocketMQConsumer.setNamespace(this.namespace);
+        if (!StringUtils.isEmpty(namespace)) {
+            rocketMQConsumer.setNamespace(namespace);
         }
         if (!StringUtils.isBlank(nameServer)) {
             rocketMQConsumer.setNamesrvAddr(nameServer);
@@ -67,8 +73,9 @@ public class SmartMQRocketMQConsumer implements SmartMQConsumer {
         if (batchSize != -1) {
             rocketMQConsumer.setConsumeMessageBatchMaxSize(batchSize);
         }
+        rocketMQConsumer.setConsumeThreadMax(consumeThreadMax);
         try {
-            rocketMQConsumer.subscribe(this.topic, this.filter);
+            rocketMQConsumer.subscribe(topic, filter);
             rocketMQConsumer.registerMessageListener((MessageListenerOrderly) (messageExts, context) -> {
                 context.setAutoCommit(true);
                 boolean isSuccess = process(messageExts);
@@ -79,6 +86,7 @@ public class SmartMQRocketMQConsumer implements SmartMQConsumer {
                 }
             });
             rocketMQConsumer.start();
+            logger.info("RocketMQConsumer started success!");
         } catch (MQClientException ex) {
             logger.error("Start RocketMQ consumer error", ex);
         }

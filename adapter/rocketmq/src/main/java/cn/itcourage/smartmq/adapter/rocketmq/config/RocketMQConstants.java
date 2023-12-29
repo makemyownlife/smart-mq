@@ -14,4 +14,6 @@ public class RocketMQConstants {
 
     public static final String ROCKETMQ_BATCH_SIZE                   = ROOT + "." + "batch.size";
 
+    public static final String ROCKETMQ_CONSUME_THREAD_MAX                  = ROOT + "." + "consume.threadMax";
+
 }
