@@ -21,7 +21,7 @@ public class SmartMQController {
 
     private static final String CONNECTOR_SPI_DIR = "/plugin";
 
-    private static final String CONNECTOR_STANDBY_SPI_DIR = "/smartmq/plugin";
+    private static final String CONNECTOR_STANDBY_SPI_DIR = "/smart-mq-broker/plugin";
 
     private MessageStore messageStore;
 

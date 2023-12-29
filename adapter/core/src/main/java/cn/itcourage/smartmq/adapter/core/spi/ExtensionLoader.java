@@ -33,7 +33,7 @@ public class ExtensionLoader<T> {
 
     private static final String                                      SERVICES_DIRECTORY         = "META-INF/services/";
 
-    private static final String                                      CANAL_DIRECTORY            = "META-INF/canal/";
+    private static final String                                      SPI_DIRECTORY            = "META-INF/smartmq/";
 
     private static final String                                      DEFAULT_CLASSLOADER_POLICY = "internal";
 
@@ -294,7 +294,7 @@ public class ExtensionLoader<T> {
                             localClassLoader = new URLClassLoader(new URL[] { url }, parent);
                         }
 
-                        loadFile(extensionClasses, CANAL_DIRECTORY, localClassLoader);
+                        loadFile(extensionClasses, SPI_DIRECTORY, localClassLoader);
                         loadFile(extensionClasses, SERVICES_DIRECTORY, localClassLoader);
                     }
                 }
@@ -303,7 +303,7 @@ public class ExtensionLoader<T> {
 
         // 2. load inner extension class with default classLoader
         ClassLoader classLoader = findClassLoader();
-        loadFile(extensionClasses, CANAL_DIRECTORY, classLoader);
+        loadFile(extensionClasses, SPI_DIRECTORY, classLoader);
         loadFile(extensionClasses, SERVICES_DIRECTORY, classLoader);
 
         return extensionClasses;
