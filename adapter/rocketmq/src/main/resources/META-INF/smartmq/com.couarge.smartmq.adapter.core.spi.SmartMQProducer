@@ -1,1 +1,1 @@
-kafka=producer.cn.itcourage.smartmq.adapter.rocketmq.SmartMQRocketMQProducer
+kafka=cn.itcourage.smartmq.adapter.rocketmq.SmartMQRocketMQProducer

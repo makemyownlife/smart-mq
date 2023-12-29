@@ -61,6 +61,9 @@ public class SmartMQRocketMQConsumer implements SmartMQConsumer {
         if (!StringUtils.isEmpty(this.namespace)) {
             rocketMQConsumer.setNamespace(this.namespace);
         }
+        if (!StringUtils.isBlank(nameServer)) {
+            rocketMQConsumer.setNamesrvAddr(nameServer);
+        }
         if (batchSize != -1) {
             rocketMQConsumer.setConsumeMessageBatchMaxSize(batchSize);
         }
