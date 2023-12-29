@@ -28,11 +28,17 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- RocketMQ Client 依赖 -->
+        <!-- RocketMQ Client 依赖 start -->
         <dependency>
             <groupId>org.apache.rocketmq</groupId>
             <artifactId>rocketmq-client</artifactId>
             <version>${rocketmq_version}</version>
+        </dependency>
+        <!-- RocketMQ Client 依赖 end -->
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
         </dependency>
 
     </dependencies>
