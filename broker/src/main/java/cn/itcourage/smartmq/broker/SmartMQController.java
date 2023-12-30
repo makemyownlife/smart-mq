@@ -27,6 +27,8 @@ public class SmartMQController {
 
     private SmartMQConfig smartMQConfig;
 
+    private SmartMQSchedule smartMQSchedule;
+
     // 默认初始化是：Master同步模式
     private BrokerRole brokerRole = BrokerRole.SYNC_MASTER;
 
@@ -52,8 +54,9 @@ public class SmartMQController {
             // 通过 zookeeper 来抢占最小节点 判断是否是 Master or Slave
             this.brokerRole = BrokerRole.SYNC_MASTER;
         }
-        // 3. 启动适配器对象
-        this.smartMQAdapter = new SmartMQAdapter(this.smartMQConfig);
+        // 3. 启动调度器
+        this.smartMQSchedule = new SmartMQSchedule(this);
+        smartMQSchedule.start();
     }
 
     //============================================================ get 方法  start ============================================================
@@ -65,7 +68,19 @@ public class SmartMQController {
         return smartMQAdapter;
     }
 
-//============================================================ get 方法  end  ============================================================
+    public SmartMQSchedule getSmartMQSchedule() {
+        return smartMQSchedule;
+    }
+
+    public BrokerRole getBrokerRole() {
+        return brokerRole;
+    }
+
+    public SmartMQConfig getSmartMQConfig() {
+        return smartMQConfig;
+    }
+
+    //============================================================ get 方法  end  ============================================================
 
     //1.修改服务状态关闭中。
     //2.若是高可用机制，则从zk节点下删除本服务节点。
@@ -76,8 +91,8 @@ public class SmartMQController {
         if (this.messageStore != null) {
             this.messageStore.shutdown();
         }
-        if (this.smartMQAdapter != null) {
-            this.smartMQAdapter.shutdown();
+        if (this.smartMQSchedule != null) {
+            this.smartMQSchedule.shutdown();
         }
     }
 

@@ -10,7 +10,10 @@ public class SmartMQSchedule {
 
     private final static Logger logger = LoggerFactory.getLogger(SmartMQSchedule.class);
 
-    public SmartMQSchedule() {
+    private SmartMQController smartMQController;
+
+    public SmartMQSchedule(SmartMQController smartMQController) {
+        this.smartMQController = smartMQController;
     }
 
     public void start() {
