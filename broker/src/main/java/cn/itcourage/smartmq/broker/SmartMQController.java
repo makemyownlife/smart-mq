@@ -56,7 +56,7 @@ public class SmartMQController {
         }
         // 3. 启动调度器
         this.smartMQSchedule = new SmartMQSchedule(this);
-        smartMQSchedule.start();
+        this.smartMQSchedule.start();
     }
 
     //============================================================ get 方法  start ============================================================
