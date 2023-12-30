@@ -56,7 +56,7 @@ public class SmartMQController {
             this.brokerRole = BrokerRole.SYNC_MASTER;
         } else {
             // 通过 zookeeper 来抢占最小节点 判断是否是 Master or Slave
-            this.brokerRole = BrokerRole.SYNC_MASTER;
+            this.brokerRole = BrokerRole.SLAVE;
         }
         this.smartMQAdapter = new SmartMQAdapter(this.smartMQConfig);
         // 3. 判断是否启动拉取服务 ，只有主服务器才能拉取消息并存储
@@ -100,6 +100,9 @@ public class SmartMQController {
     public synchronized void shutdown() throws Exception {
         if (this.messageStore != null) {
             this.messageStore.shutdown();
+        }
+        if (this.smartMQDispatcher != null) {
+            this.smartMQDispatcher.shutdown();
         }
         if (this.smartMQScheduler != null) {
             this.smartMQScheduler.shutdown();
