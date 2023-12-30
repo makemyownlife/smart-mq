@@ -10,5 +10,15 @@ public class SmartMQSchedule {
 
     private final static Logger logger = LoggerFactory.getLogger(SmartMQSchedule.class);
 
+    public SmartMQSchedule() {
+    }
+
+    public void start() {
+
+    }
+
+    public void shutdown() {
+
+    }
 
 }

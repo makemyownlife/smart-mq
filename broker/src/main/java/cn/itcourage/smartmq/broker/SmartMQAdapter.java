@@ -1,7 +1,7 @@
 package cn.itcourage.smartmq.broker;
 
 import cn.itcourage.smartmq.broker.config.SmartMQConfig;
-import cn.itcourage.smartmq.broker.support.AdapterState;
+import cn.itcourage.smartmq.broker.support.ServiceState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,29 +16,21 @@ public class SmartMQAdapter {
 
     private static final String CONNECTOR_STANDBY_SPI_DIR = "/smart-mq-broker/plugin";
 
-    private SmartMQConfig smartMQConfig;
-
     //适配器状态
-    private AdapterState adapterState = AdapterState.CREATE_JUST;
+    private ServiceState serviceState = ServiceState.CREATE_JUST;
+
+    private SmartMQConfig smartMQConfig;
 
     public SmartMQAdapter(SmartMQConfig smartMQConfig) {
         this.smartMQConfig = smartMQConfig;
     }
 
-    public void start() {
-        this.adapterState = AdapterState.RUNNING;
-    }
-
-    public void standby() {
-        this.adapterState = AdapterState.STANDBY;
-    }
-
     public void shutdown() {
-        this.adapterState = AdapterState.SHUTDOWN_ALREADY;
+        this.serviceState = ServiceState.SHUTDOWN_ALREADY;
     }
 
-    public AdapterState getAdapterState() {
-        return this.adapterState;
+    public ServiceState getAdapterState() {
+        return this.serviceState;
     }
 
 }

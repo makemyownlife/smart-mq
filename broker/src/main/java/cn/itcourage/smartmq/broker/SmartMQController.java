@@ -2,6 +2,7 @@ package cn.itcourage.smartmq.broker;
 
 import cn.itcourage.smartmq.broker.config.ConfigConstants;
 import cn.itcourage.smartmq.broker.config.SmartMQConfig;
+import cn.itcourage.smartmq.broker.support.BrokerRole;
 import cn.itcourage.smartmq.store.MessageStore;
 import cn.itcourage.smartmq.store.RocksDBMessageStore;
 import cn.itcourage.smartmq.store.SwiftMessageStore;
@@ -26,6 +27,9 @@ public class SmartMQController {
 
     private SmartMQConfig smartMQConfig;
 
+    // 默认初始化是：Master同步模式
+    private BrokerRole brokerRole = BrokerRole.SYNC_MASTER;
+
     // 1. 启动本地存储。
     // 2. 读取两种 standalone 独立运行模式，还是 zookeeper 高可用模式。
     // 3. 若是 standalone 模式，直接启动适配器消费者服务。
@@ -41,7 +45,14 @@ public class SmartMQController {
         }
         this.messageStore.load();
         this.messageStore.start();
-        // 3. 初始化适配器对象
+        // 2. 判断当前Broker的角色
+        if (ConfigConstants.STANDALONE_MODE.equals(this.smartMQConfig.getRunmode())) {
+            this.brokerRole = BrokerRole.SYNC_MASTER;
+        } else {
+            // 通过 zookeeper 来抢占最小节点 判断是否是 Master or Slave
+            this.brokerRole = BrokerRole.SYNC_MASTER;
+        }
+        // 3. 启动适配器对象
         this.smartMQAdapter = new SmartMQAdapter(this.smartMQConfig);
     }
 

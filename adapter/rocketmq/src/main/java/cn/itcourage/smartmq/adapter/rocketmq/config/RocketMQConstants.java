@@ -5,15 +5,12 @@ package cn.itcourage.smartmq.adapter.rocketmq.config;
  */
 public class RocketMQConstants {
 
+    public static final String ROCKETMQ_NAMESRV_ADDR = "nameServer";
 
-    public static final String ROOT                                  = "rocketmq";
+    public static final String ROCKETMQ_NAMESPACE = "namespace";
 
-    public static final String ROCKETMQ_NAMESRV_ADDR                 = ROOT + "." + "namesrv.addr";
+    public static final String ROCKETMQ_BATCH_SIZE = "batchSize";
 
-    public static final String ROCKETMQ_NAMESPACE                    = ROOT + "." + "namespace";
-
-    public static final String ROCKETMQ_BATCH_SIZE                   = ROOT + "." + "batch.size";
-
-    public static final String ROCKETMQ_CONSUME_THREAD_COUNT                  = ROOT + "." + "consume.threadCount";
+    public static final String ROCKETMQ_CONSUME_THREAD_COUNT = "threadCount";
 
 }
