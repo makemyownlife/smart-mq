@@ -63,10 +63,10 @@ public class SmartMQController {
         if (this.brokerRole != BrokerRole.SLAVE) {
             this.smartMQDispatcher = new SmartMQDispatcher(this);
             this.smartMQDispatcher.start();
+            // 4. 启动调度器 ，两种情况：1、主服务器  2、主服务器挂掉，slave 才会启动调度
+            this.smartMQScheduler = new SmartMQScheduler(this);
+            this.smartMQScheduler.start();
         }
-        // 4. 启动调度器
-        this.smartMQScheduler = new SmartMQScheduler(this);
-        this.smartMQScheduler.start();
     }
 
     //============================================================ get 方法  start ============================================================

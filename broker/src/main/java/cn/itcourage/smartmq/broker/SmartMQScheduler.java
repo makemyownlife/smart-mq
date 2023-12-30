@@ -19,7 +19,7 @@ public class SmartMQScheduler {
     }
 
     public void start() {
-        BrokerRole brokerRole = smartMQController.getBrokerRole();
+
     }
 
     public void shutdown() {

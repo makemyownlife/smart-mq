@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 @SPI(value = "rocketmq")
 public class SmartMQRocketMQConsumer implements SmartMQConsumer {
@@ -25,6 +26,8 @@ public class SmartMQRocketMQConsumer implements SmartMQConsumer {
     private final static Logger logger = LoggerFactory.getLogger(SmartMQRocketMQConsumer.class);
 
     private BlockingQueue<ConsumerBatchMessage<CommonMessage>> messageBlockingQueue;
+
+    private volatile ConsumerBatchMessage<CommonMessage> lastGetBatchMessage = null;
 
     private long batchProcessTimeout = 60 * 1000;
 
@@ -118,6 +121,50 @@ public class SmartMQRocketMQConsumer implements SmartMQConsumer {
         }
         boolean isSuccess = batchMessage.isSuccess();
         return isCompleted && isSuccess;
+    }
+
+    @Override
+    public List<CommonMessage> getMessage(Long timeout, TimeUnit unit) {
+        try {
+            if (this.lastGetBatchMessage != null) {
+                throw new RuntimeException("mq get/ack not support concurrent & async ack");
+            }
+            ConsumerBatchMessage<CommonMessage> batchMessage = messageBlockingQueue.poll(timeout, unit);
+            if (batchMessage != null) {
+                this.lastGetBatchMessage = batchMessage;
+                return batchMessage.getData();
+            }
+        } catch (InterruptedException ex) {
+            logger.warn("Get message timeout", ex);
+            throw new RuntimeException("Failed to fetch the data after: " + timeout);
+        }
+        return null;
+    }
+
+    @Override
+    public void rollback() {
+        try {
+            if (this.lastGetBatchMessage != null) {
+                this.lastGetBatchMessage.fail();
+            }
+        } finally {
+            this.lastGetBatchMessage = null;
+        }
+    }
+
+    @Override
+    public void ack() {
+        try {
+            if (this.lastGetBatchMessage != null) {
+                this.lastGetBatchMessage.ack();
+            }
+        } catch (Throwable e) {
+            if (this.lastGetBatchMessage != null) {
+                this.lastGetBatchMessage.fail();
+            }
+        } finally {
+            this.lastGetBatchMessage = null;
+        }
     }
 
     @Override
