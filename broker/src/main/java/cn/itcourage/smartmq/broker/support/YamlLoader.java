@@ -7,7 +7,7 @@ import java.io.InputStream;
 
 public class YamlLoader {
 
-    private final static String CONFIG_FILE_NAME = "config.yaml";
+    private final static String CONFIG_FILE_NAME = "config.yml";
 
     public static SmartMQConfig loadConfig() {
         Yaml yaml = new Yaml();
