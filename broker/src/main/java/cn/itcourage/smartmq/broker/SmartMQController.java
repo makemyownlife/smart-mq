@@ -1,6 +1,5 @@
 package cn.itcourage.smartmq.broker;
 
-import cn.itcourage.smartmq.broker.support.AdapterHolder;
 import cn.itcourage.smartmq.store.MessageStore;
 import cn.itcourage.smartmq.store.RocksDBMessageStore;
 import cn.itcourage.smartmq.store.config.MessageStoreConfig;
@@ -20,7 +19,7 @@ public class SmartMQController {
 
     private MessageStore messageStore;
 
-    private AdapterHolder adapterHolder;
+    private SmartMQAdapter smartMQAdapter;
 
     private SmartMQConfig smartMQConfig;
 
@@ -36,14 +35,18 @@ public class SmartMQController {
         this.messageStore.load();
         this.messageStore.start();
         // 3. 初始化适配器对象
-        this.adapterHolder = new AdapterHolder(this.smartMQConfig);
+        this.smartMQAdapter = new SmartMQAdapter(this.smartMQConfig);
     }
 
     //============================================================ get 方法  start ============================================================
     public MessageStore getMessageStore() {
         return this.messageStore;
     }
-    //============================================================ get 方法  end  ============================================================
+
+    public SmartMQAdapter getSmartMQAdapter() {
+        return smartMQAdapter;
+    }
+//============================================================ get 方法  end  ============================================================
 
     //1.修改服务状态关闭中。
     //2.若是高可用机制，则从zk节点下删除本服务节点。
@@ -54,8 +57,8 @@ public class SmartMQController {
         if (this.messageStore != null) {
             this.messageStore.shutdown();
         }
-        if (this.adapterHolder != null) {
-            this.adapterHolder.stop();
+        if (this.smartMQAdapter != null) {
+            this.smartMQAdapter.shutdown();
         }
     }
 
