@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * SmartMQ消息分发器
+ * SmartMQ 消息分发器
  */
 public class SmartMQDispatcher {
 
