@@ -47,6 +47,7 @@ public class SmartMQController {
     public SmartMQAdapter getSmartMQAdapter() {
         return smartMQAdapter;
     }
+
 //============================================================ get 方法  end  ============================================================
 
     //1.修改服务状态关闭中。
