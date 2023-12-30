@@ -1,5 +1,8 @@
 package cn.itcourage.smartmq.broker;
 
+import cn.itcourage.smartmq.broker.config.SmartMQConfig;
+import cn.itcourage.smartmq.broker.support.YamlLoader;
+import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,7 +12,8 @@ public class SmartMQApplication {
     public static void main(String[] args) throws Exception {
         long start = System.currentTimeMillis();
         logger.info("开始启动SmartMQ服务");
-        SmartMQConfig smartMQConfig = new SmartMQConfig();
+        SmartMQConfig smartMQConfig = YamlLoader.loadConfig();
+        logger.info("Broker配置信息:" + JSON.toJSONString(smartMQConfig));
         SmartMQController smartMQController = new SmartMQController(smartMQConfig);
         smartMQController.start();
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {

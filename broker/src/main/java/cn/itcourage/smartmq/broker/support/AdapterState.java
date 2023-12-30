@@ -1,6 +1,6 @@
 package cn.itcourage.smartmq.broker.support;
 
-public enum MQAdapterState {
+public enum AdapterState {
 
     /**
      * Service just created,not start

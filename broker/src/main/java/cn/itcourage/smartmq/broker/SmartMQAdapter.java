@@ -1,6 +1,7 @@
 package cn.itcourage.smartmq.broker;
 
-import cn.itcourage.smartmq.broker.support.MQAdapterState;
+import cn.itcourage.smartmq.broker.config.SmartMQConfig;
+import cn.itcourage.smartmq.broker.support.AdapterState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,25 +19,25 @@ public class SmartMQAdapter {
     private SmartMQConfig smartMQConfig;
 
     //适配器状态
-    private MQAdapterState adapterState = MQAdapterState.CREATE_JUST;
+    private AdapterState adapterState = AdapterState.CREATE_JUST;
 
     public SmartMQAdapter(SmartMQConfig smartMQConfig) {
         this.smartMQConfig = smartMQConfig;
     }
 
     public void start() {
-        this.adapterState = MQAdapterState.RUNNING;
+        this.adapterState = AdapterState.RUNNING;
     }
 
     public void standby() {
-        this.adapterState = MQAdapterState.STANDBY;
+        this.adapterState = AdapterState.STANDBY;
     }
 
     public void shutdown() {
-        this.adapterState = MQAdapterState.SHUTDOWN_ALREADY;
+        this.adapterState = AdapterState.SHUTDOWN_ALREADY;
     }
 
-    public MQAdapterState getAdapterState() {
+    public AdapterState getAdapterState() {
         return this.adapterState;
     }
 

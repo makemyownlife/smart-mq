@@ -1,8 +1,8 @@
 runmode: standalone  # standalone：独立运行、zookeeper：主从配置
-brokerName: broker-a
+brokerName: broker-a # 主从模式下名称相同
 consumer:
   type: rocketmq
   topic: mytest
   groupName: smartMQGroup
-rocketmq:
+props:
   nameserver: 192.168.1.9:9876
