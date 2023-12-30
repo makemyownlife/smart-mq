@@ -53,6 +53,11 @@ public class RocksDBMessageStore implements MessageStore {
     }
 
     @Override
+    public PutMessageResult putMessage(final MessageBrokerInner msg) {
+        return null;
+    }
+
+    @Override
     public void shutdown() {
 
     }

@@ -28,6 +28,11 @@ public class SwiftMessageStore implements MessageStore {
     }
 
     @Override
+    public PutMessageResult putMessage(MessageBrokerInner msg) {
+        return null;
+    }
+
+    @Override
     public void shutdown() {
 
     }
