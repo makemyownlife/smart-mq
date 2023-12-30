@@ -27,7 +27,11 @@ public class SmartMQController {
 
     private SmartMQConfig smartMQConfig;
 
-    private SmartMQSchedule smartMQSchedule;
+    //消息分发器（主服务器消费功能）
+    private SmartMQDispatcher smartMQDispatcher;
+
+    //消息调度器（定时发送存储消息到目标Broker集群）
+    private SmartMQScheduler smartMQScheduler;
 
     // 默认初始化是：Master同步模式
     private BrokerRole brokerRole = BrokerRole.SYNC_MASTER;
@@ -54,9 +58,15 @@ public class SmartMQController {
             // 通过 zookeeper 来抢占最小节点 判断是否是 Master or Slave
             this.brokerRole = BrokerRole.SYNC_MASTER;
         }
-        // 3. 启动调度器
-        this.smartMQSchedule = new SmartMQSchedule(this);
-        this.smartMQSchedule.start();
+        this.smartMQAdapter = new SmartMQAdapter(this.smartMQConfig);
+        // 3. 判断是否启动拉取服务 ，只有主服务器才能拉取消息并存储
+        if (this.brokerRole != BrokerRole.SLAVE) {
+            this.smartMQDispatcher = new SmartMQDispatcher(this);
+            this.smartMQDispatcher.start();
+        }
+        // 4. 启动调度器
+        this.smartMQScheduler = new SmartMQScheduler(this);
+        this.smartMQScheduler.start();
     }
 
     //============================================================ get 方法  start ============================================================
@@ -68,8 +78,8 @@ public class SmartMQController {
         return smartMQAdapter;
     }
 
-    public SmartMQSchedule getSmartMQSchedule() {
-        return smartMQSchedule;
+    public SmartMQScheduler getSmartMQSchedule() {
+        return smartMQScheduler;
     }
 
     public BrokerRole getBrokerRole() {
@@ -91,8 +101,8 @@ public class SmartMQController {
         if (this.messageStore != null) {
             this.messageStore.shutdown();
         }
-        if (this.smartMQSchedule != null) {
-            this.smartMQSchedule.shutdown();
+        if (this.smartMQScheduler != null) {
+            this.smartMQScheduler.shutdown();
         }
     }
 
