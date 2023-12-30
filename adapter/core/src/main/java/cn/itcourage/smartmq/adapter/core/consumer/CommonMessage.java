@@ -11,17 +11,17 @@ public class CommonMessage implements Serializable {
 
     private static final long serialVersionUID = 2611556444074013268L;
 
-    private String msgId;
+    private String messageId;
 
     private byte[] body;
 
-    public CommonMessage(String msgId, byte[] body) {
-        this.msgId = msgId;
+    public CommonMessage(String messageId, byte[] body) {
+        this.messageId = messageId;
         this.body = body;
     }
 
-    public String getMsgId() {
-        return msgId;
+    public String getMessageId() {
+        return messageId;
     }
 
     public byte[] getBody() {

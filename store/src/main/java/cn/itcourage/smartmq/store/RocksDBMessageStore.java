@@ -46,10 +46,6 @@ public class RocksDBMessageStore implements MessageStore {
 
     @Override
     public void start() throws Exception {
-        this.rocksDB.put("hello".getBytes(), "courqge".getBytes());
-        byte[] valueBytes = this.rocksDB.get("hello".getBytes());
-        String value = new String(valueBytes);
-        logger.info("value:" + value);
     }
 
     @Override
