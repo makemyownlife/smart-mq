@@ -1,14 +1,16 @@
 package cn.itcourage.smartmq.broker;
 
+import cn.itcourage.smartmq.broker.config.ConfigConstants;
 import cn.itcourage.smartmq.broker.config.SmartMQConfig;
 import cn.itcourage.smartmq.store.MessageStore;
 import cn.itcourage.smartmq.store.RocksDBMessageStore;
+import cn.itcourage.smartmq.store.SwiftMessageStore;
 import cn.itcourage.smartmq.store.config.MessageStoreConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *  SmartMQ 控制器
+ * SmartMQ 控制器
  */
 public class SmartMQController {
 
@@ -32,7 +34,11 @@ public class SmartMQController {
     public synchronized void start() throws Exception {
         // 1. 初始化本地存储
         MessageStoreConfig messageStoreConfig = new MessageStoreConfig();
-        this.messageStore = new RocksDBMessageStore(messageStoreConfig);
+        if (ConfigConstants.ROCKSDB_STORE_MODE.equals(smartMQConfig.getStoreType())) {
+            this.messageStore = new RocksDBMessageStore(messageStoreConfig);
+        } else {
+            this.messageStore = new SwiftMessageStore(messageStoreConfig);
+        }
         this.messageStore.load();
         this.messageStore.start();
         // 3. 初始化适配器对象

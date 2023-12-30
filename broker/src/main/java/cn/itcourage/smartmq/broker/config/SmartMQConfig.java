@@ -6,6 +6,10 @@ public class SmartMQConfig {
 
     private String runmode;
 
+    private String storeType;
+
+    private String storePath;
+
     private String brokerName;
 
     private ConsumerConfig consumer;
@@ -43,6 +47,22 @@ public class SmartMQConfig {
 
     public void setProps(HashMap<String, String> props) {
         this.props = props;
+    }
+
+    public String getStoreType() {
+        return storeType;
+    }
+
+    public void setStoreType(String storeType) {
+        this.storeType = storeType;
+    }
+
+    public String getStorePath() {
+        return storePath;
+    }
+
+    public void setStorePath(String storePath) {
+        this.storePath = storePath;
     }
 
 }

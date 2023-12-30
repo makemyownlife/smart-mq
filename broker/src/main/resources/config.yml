@@ -1,5 +1,6 @@
 runmode: standalone  # standalone：独立运行、zookeeper：主从配置
 brokerName: broker-a # 主从模式下名称相同
+storeType: rocksdb   # 存储引擎 默认 rocksdb
 consumer:
   type: rocketmq
   topic: mytest
