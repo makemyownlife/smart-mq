@@ -14,8 +14,6 @@
         <module>common</module>
         <!-- 客户端 -->
         <module>client</module>
-        <!-- 通讯框架 -->
-        <module>remoting</module>
         <!-- 存储模块 -->
         <module>store</module>
         <!-- MQ 服务端 -->
