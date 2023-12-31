@@ -27,6 +27,7 @@ public class RocketMQProducerUnitTest {
         producer.start();
         Message msg = new Message(TOPIC, tag, ("Hello RocketMQ").getBytes(RemotingHelper.DEFAULT_CHARSET));
         msg.putUserProperty(SmartMQAdapterConstants.DEST_TOPIC, "order-topic");
+        msg.putUserProperty(SmartMQAdapterConstants.DELAY_TIME, String.valueOf(System.currentTimeMillis() + 1000 * 30L));
         SendResult sendResult = producer.send(msg);
         System.out.println(JSON.toJSONString(sendResult));
     }
