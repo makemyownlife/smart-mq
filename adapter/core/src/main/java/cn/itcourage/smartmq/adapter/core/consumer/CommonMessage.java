@@ -13,16 +13,14 @@ public class CommonMessage implements Serializable {
 
     private String messageId;
 
+    private String topic;
+
     private byte[] body;
 
     private Map<String, String> properties;
 
-    public CommonMessage(String messageId, byte[] body) {
-        this.messageId = messageId;
-        this.body = body;
-    }
-
-    public CommonMessage(String messageId, byte[] body, Map<String, String> properties) {
+    public CommonMessage(String topic, String messageId, byte[] body, Map<String, String> properties) {
+        this.topic = topic;
         this.messageId = messageId;
         this.body = body;
         this.properties = properties;
@@ -40,5 +38,8 @@ public class CommonMessage implements Serializable {
         return properties;
     }
 
+    public String getTopic() {
+        return topic;
+    }
 
 }

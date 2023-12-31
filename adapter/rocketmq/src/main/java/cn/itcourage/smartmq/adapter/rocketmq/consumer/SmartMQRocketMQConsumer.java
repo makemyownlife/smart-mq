@@ -3,6 +3,7 @@ package cn.itcourage.smartmq.adapter.rocketmq.consumer;
 import cn.itcourage.smartmq.adapter.core.consumer.CommonMessage;
 import cn.itcourage.smartmq.adapter.core.spi.SPI;
 import cn.itcourage.smartmq.adapter.core.spi.SmartMQConsumer;
+import cn.itcourage.smartmq.adapter.core.util.SmartMQAdapterConstants;
 import cn.itcourage.smartmq.adapter.rocketmq.config.RocketMQConstants;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
@@ -102,8 +103,9 @@ public class SmartMQRocketMQConsumer implements SmartMQConsumer {
         for (MessageExt messageExt : messageExts) {
             byte[] data = messageExt.getBody();
             Map<String, String> properties = messageExt.getProperties();
+            String topic = properties.get(SmartMQAdapterConstants.DEST_TOPIC);
             if (data != null) {
-                CommonMessage commonMessage = new CommonMessage(messageExt.getMsgId(), data, properties);
+                CommonMessage commonMessage = new CommonMessage(topic, messageExt.getMsgId(), data, properties);
                 messageList.add(commonMessage);
             }
         }
