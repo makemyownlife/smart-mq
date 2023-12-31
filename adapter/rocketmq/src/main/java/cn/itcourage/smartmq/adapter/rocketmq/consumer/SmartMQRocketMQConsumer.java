@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -100,8 +101,9 @@ public class SmartMQRocketMQConsumer implements SmartMQConsumer {
         List<CommonMessage> messageList = Lists.newArrayList();
         for (MessageExt messageExt : messageExts) {
             byte[] data = messageExt.getBody();
+            Map<String, String> properties = messageExt.getProperties();
             if (data != null) {
-                CommonMessage commonMessage = new CommonMessage(messageExt.getMsgId(), data);
+                CommonMessage commonMessage = new CommonMessage(messageExt.getMsgId(), data, properties);
                 messageList.add(commonMessage);
             }
         }

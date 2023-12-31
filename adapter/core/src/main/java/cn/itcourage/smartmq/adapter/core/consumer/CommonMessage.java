@@ -15,9 +15,17 @@ public class CommonMessage implements Serializable {
 
     private byte[] body;
 
+    private Map<String, String> properties;
+
     public CommonMessage(String messageId, byte[] body) {
         this.messageId = messageId;
         this.body = body;
+    }
+
+    public CommonMessage(String messageId, byte[] body, Map<String, String> properties) {
+        this.messageId = messageId;
+        this.body = body;
+        this.properties = properties;
     }
 
     public String getMessageId() {
@@ -27,5 +35,10 @@ public class CommonMessage implements Serializable {
     public byte[] getBody() {
         return body;
     }
+
+    public Map<String, String> getProperties() {
+        return properties;
+    }
+
 
 }
