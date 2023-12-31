@@ -3,15 +3,11 @@ package cn.itcourage.smartmq.broker;
 import cn.itcourage.smartmq.adapter.core.consumer.CommonMessage;
 import cn.itcourage.smartmq.adapter.core.spi.SmartMQConsumer;
 import cn.itcourage.smartmq.common.timer.utils.CollectionUtils;
-import cn.itcourage.smartmq.common.util.ThreadFactoryImpl;
 import cn.itcourage.smartmq.store.MessageStore;
-import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -24,13 +20,13 @@ public class SmartMQDispatcher {
 
     protected volatile boolean stopped = false;
 
-    private SmartMQAdapter smartMQAdapter;
+    private final SmartMQAdapter smartMQAdapter;
 
     private SmartMQConsumer smartMQConsumer;
 
-    private MessageStore messageStore;
+    private final MessageStore messageStore;
 
-    private Thread dispatchMessageThread;
+    private final Thread dispatchMessageThread;
 
     public SmartMQDispatcher(SmartMQController smartMQController) {
         this.smartMQAdapter = smartMQController.getSmartMQAdapter();
