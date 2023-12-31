@@ -10,11 +10,9 @@ public class SmartMQBrokerException extends Exception {
         super(message, cause);
     }
 
-
     public SmartMQBrokerException(final String message) {
         super(message);
     }
-
 
     public SmartMQBrokerException(final Throwable cause) {
         super(cause);

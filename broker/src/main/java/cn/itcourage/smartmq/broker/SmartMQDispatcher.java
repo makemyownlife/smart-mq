@@ -5,6 +5,7 @@ import cn.itcourage.smartmq.adapter.core.spi.SmartMQConsumer;
 import cn.itcourage.smartmq.common.timer.utils.CollectionUtils;
 import cn.itcourage.smartmq.common.util.ThreadFactoryImpl;
 import cn.itcourage.smartmq.store.MessageStore;
+import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,33 +32,26 @@ public class SmartMQDispatcher {
 
     private MessageStore messageStore;
 
-    private ThreadPoolExecutor dispatchMessageThreads;
+    private Thread dispatchMessageThread;
 
     public SmartMQDispatcher(SmartMQController smartMQController) {
         this.smartMQAdapter = smartMQController.getSmartMQAdapter();
         this.messageStore = smartMQController.getMessageStore();
-        //定义线程池，并执行拉取消息任务
-        this.dispatchMessageThreads = new ThreadPoolExecutor(
-                MAX_THREAD_COUNT,
-                MAX_THREAD_COUNT,
-                1000 * 60,
-                TimeUnit.MILLISECONDS,
-                new LinkedBlockingQueue<>(),
-                new ThreadFactoryImpl("dispatchMessageThread_"));
+        //消息分发线程池，并执行拉取消息任务
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                dispatchMessages();
+            }
+        };
+        this.dispatchMessageThread = new Thread(runnable, "dispatchMessageThread");
     }
 
     public synchronized void start() {
         //创建消费者适配器
         this.smartMQConsumer = smartMQAdapter.createAndGetMQConsumerInstance();
-        for (int i = 0; i < MAX_THREAD_COUNT; i++) {
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    dispatchMessages();
-                }
-            };
-            this.dispatchMessageThreads.submit(runnable);
-        }
+        //启动分发线程
+        this.dispatchMessageThread.start();
     }
 
     private void dispatchMessages() {
@@ -66,7 +60,8 @@ public class SmartMQDispatcher {
                 List<CommonMessage> messageList = smartMQConsumer.getMessage(30L, TimeUnit.SECONDS);
                 if (CollectionUtils.isNotEmpty(messageList)) {
                     for (CommonMessage commonMessage : messageList) {
-
+                        String messageId = commonMessage.getMessageId();
+                        logger.info("messageId:" + messageId);
                     }
                     smartMQConsumer.ack();
                 }
@@ -79,16 +74,9 @@ public class SmartMQDispatcher {
 
     public synchronized void shutdown() {
         this.stopped = true;
-        if (this.dispatchMessageThreads != null) {
-            try {
-                this.dispatchMessageThreads.awaitTermination(20, TimeUnit.SECONDS);
-            } catch (InterruptedException e) {
-            }
-        }
         if (this.smartMQConsumer != null) {
             this.smartMQConsumer.stop();
         }
-
     }
 
 }
