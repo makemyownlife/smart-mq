@@ -22,8 +22,6 @@ public class SmartMQDispatcher {
 
     private final static Logger logger = LoggerFactory.getLogger(SmartMQDispatcher.class);
 
-    private final static int MAX_THREAD_COUNT = 4;
-
     protected volatile boolean stopped = false;
 
     private SmartMQAdapter smartMQAdapter;
