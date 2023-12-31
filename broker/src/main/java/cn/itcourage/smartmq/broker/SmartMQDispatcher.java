@@ -66,7 +66,7 @@ public class SmartMQDispatcher {
                 List<CommonMessage> messageList = smartMQConsumer.getMessage(30L, TimeUnit.SECONDS);
                 if (CollectionUtils.isNotEmpty(messageList)) {
                     for (CommonMessage commonMessage : messageList) {
-                        logger.info("messageId:" + commonMessage.getMessageId() + new String(commonMessage.getBody()));
+
                     }
                     smartMQConsumer.ack();
                 }
