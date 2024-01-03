@@ -1,7 +1,6 @@
 package cn.itcourage.smartmq.store;
 
 import cn.itcourage.smartmq.store.config.MessageStoreConfig;
-import jdk.nashorn.internal.runtime.JSONFunctions;
 import org.rocksdb.Options;
 import org.rocksdb.RocksDB;
 import org.slf4j.Logger;
@@ -9,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * 使用 RocksDB 做为延迟消息的存储容器
@@ -50,7 +48,7 @@ public class RocksDBMessageStore implements MessageStore {
 
     @Override
     public void start() throws Exception {
-
+        logger.info("启动 RocksDB 存储服务");
     }
 
     @Override
@@ -62,7 +60,6 @@ public class RocksDBMessageStore implements MessageStore {
             Map<String, String> properties = messageBrokerInner.getProperties();
             Long delayTime = messageBrokerInner.getDelayTime();
             String uniqueKey = String.valueOf(delayTime) + messageId;
-            logger.info("uniqueKey:" + uniqueKey);
             rocksDB.put(uniqueKey.getBytes(DEFAULT_CHARSET), messageBrokerInner.getBody());
             return new PutMessageResult(PutMessageStatus.PUT_OK);
         } catch (Exception e) {
