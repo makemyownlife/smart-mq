@@ -54,16 +54,21 @@ public class RocksDBMessageStore implements MessageStore {
     }
 
     @Override
-    public PutMessageResult putMessage(final MessageBrokerInner messageBrokerInner) throws Exception {
-        // 存储 body 和 properties 两个属性
-        // RowKey的设计规则是：timestamp + msgId
-        String messageId = messageBrokerInner.getMessageId();
-        Map<String, String> properties = messageBrokerInner.getProperties();
-        Long delayTime = messageBrokerInner.getDelayTime();
-        String uniqueKey = String.valueOf(delayTime) + messageId;
-        logger.info("uniqueKey:" + uniqueKey);
-        rocksDB.put(uniqueKey.getBytes(DEFAULT_CHARSET), messageBrokerInner.getBody());
-        return new PutMessageResult(PutMessageStatus.PUT_OK);
+    public PutMessageResult putMessage(final MessageBrokerInner messageBrokerInner) {
+        try {
+            // 存储 body 和 properties 两个属性
+            // RowKey的设计规则是：timestamp + msgId
+            String messageId = messageBrokerInner.getMessageId();
+            Map<String, String> properties = messageBrokerInner.getProperties();
+            Long delayTime = messageBrokerInner.getDelayTime();
+            String uniqueKey = String.valueOf(delayTime) + messageId;
+            logger.info("uniqueKey:" + uniqueKey);
+            rocksDB.put(uniqueKey.getBytes(DEFAULT_CHARSET), messageBrokerInner.getBody());
+            return new PutMessageResult(PutMessageStatus.PUT_OK);
+        } catch (Exception e) {
+            logger.error("RocksDB putMessage error:", e);
+            return new PutMessageResult(PutMessageStatus.PUT_FAIL);
+        }
     }
 
     @Override

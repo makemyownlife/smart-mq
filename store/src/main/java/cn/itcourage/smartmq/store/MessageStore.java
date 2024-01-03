@@ -18,7 +18,7 @@ public interface MessageStore {
      */
     void start() throws Exception;
 
-    PutMessageResult putMessage(final MessageBrokerInner msg) throws Exception;
+    PutMessageResult putMessage(final MessageBrokerInner msg);
 
     /**
      * Shutdown this message store.
