@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * 使用 RocksDB 做为延迟消息的存储容器
@@ -50,6 +52,10 @@ public class RocksDBMessageStore implements MessageStore {
 
     @Override
     public PutMessageResult putMessage(final MessageBrokerInner msg) {
+        // 存储 body 和 properties 两个属性
+        // RowKey的设计规则是：timestamp + UUID
+        Map<String, String> properties = msg.getProperties();
+
         return null;
     }
 
