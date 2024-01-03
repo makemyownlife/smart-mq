@@ -28,7 +28,7 @@ public class SwiftMessageStore implements MessageStore {
     }
 
     @Override
-    public PutMessageResult putMessage(MessageBrokerInner msg) {
+    public PutMessageResult putMessage(MessageBrokerInner msg) throws Exception {
         return null;
     }
 

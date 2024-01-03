@@ -10,14 +10,16 @@ public class MessageBrokerInner {
 
     private byte[] body;
 
+    private Long delayTime;
+
     private Map<String, String> properties;
 
-    public String getTopic() {
-        return topic;
-    }
-
-    public void setTopic(String topic) {
+    public MessageBrokerInner(String topic, String messageId, byte[] body, Map<String, String> properties, Long delayTime) {
         this.topic = topic;
+        this.messageId = messageId;
+        this.body = body;
+        this.delayTime = delayTime;
+        this.properties = properties;
     }
 
     public String getMessageId() {
@@ -43,4 +45,17 @@ public class MessageBrokerInner {
     public void setProperties(Map<String, String> properties) {
         this.properties = properties;
     }
+
+    public Long getDelayTime() {
+        return delayTime;
+    }
+
+    public void setDelayTime(Long delayTime) {
+        this.delayTime = delayTime;
+    }
+
+    public String getTopic() {
+        return topic;
+    }
+
 }

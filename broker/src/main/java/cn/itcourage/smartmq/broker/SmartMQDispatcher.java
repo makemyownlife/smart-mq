@@ -2,7 +2,9 @@ package cn.itcourage.smartmq.broker;
 
 import cn.itcourage.smartmq.adapter.core.consumer.CommonMessage;
 import cn.itcourage.smartmq.adapter.core.spi.SmartMQConsumer;
+import cn.itcourage.smartmq.adapter.core.util.SmartMQAdapterConstants;
 import cn.itcourage.smartmq.common.timer.utils.CollectionUtils;
+import cn.itcourage.smartmq.store.MessageBrokerInner;
 import cn.itcourage.smartmq.store.MessageStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,8 +56,15 @@ public class SmartMQDispatcher {
                 List<CommonMessage> messageList = smartMQConsumer.getMessage(30L, TimeUnit.SECONDS);
                 if (CollectionUtils.isNotEmpty(messageList)) {
                     for (CommonMessage commonMessage : messageList) {
-                        String messageId = commonMessage.getMessageId();
-                        logger.info("messageId:" + messageId + " props:" + commonMessage.getProperties());
+                        Long delayTime = Long.valueOf(commonMessage.getProperties().get(SmartMQAdapterConstants.DELAY_TIME));
+                        MessageBrokerInner messageBrokerInner = new MessageBrokerInner(
+                                commonMessage.getTopic(),
+                                commonMessage.getMessageId(),
+                                commonMessage.getBody(),
+                                commonMessage.getProperties(),
+                                delayTime
+                        );
+                        messageStore.putMessage(messageBrokerInner);
                     }
                     smartMQConsumer.ack();
                 }
