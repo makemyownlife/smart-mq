@@ -1,16 +1,8 @@
 package cn.itcourage.smartmq.broker;
 
-import cn.itcourage.smartmq.adapter.core.consumer.CommonMessage;
-import cn.itcourage.smartmq.adapter.core.util.SmartMQAdapterConstants;
-import cn.itcourage.smartmq.broker.support.BrokerRole;
-import cn.itcourage.smartmq.common.timer.utils.CollectionUtils;
-import cn.itcourage.smartmq.store.MessageBrokerInner;
 import cn.itcourage.smartmq.store.MessageStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * SmartMQ 消息调度器
