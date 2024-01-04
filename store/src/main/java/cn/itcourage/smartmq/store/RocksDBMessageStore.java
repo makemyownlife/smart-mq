@@ -17,8 +17,6 @@ public class RocksDBMessageStore implements MessageStore {
 
     private final static String DEFAULT_CHARSET = "UTF-8";
 
-    private final static String KEY_SEPERATOR = "@";
-
     private static String storeDir = System.getProperty("user.home") + File.separator + "rocksDB";
 
     private MessageStoreConfig messageStoreConfig;
