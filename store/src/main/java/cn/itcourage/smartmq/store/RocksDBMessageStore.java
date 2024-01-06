@@ -79,6 +79,7 @@ public class RocksDBMessageStore implements MessageStore {
     @Override
     public void destroy() {
 
+
     }
 
 }
