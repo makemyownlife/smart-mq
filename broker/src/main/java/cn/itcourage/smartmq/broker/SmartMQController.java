@@ -78,7 +78,7 @@ public class SmartMQController {
         return smartMQAdapter;
     }
 
-    public SmartMQScheduler getSmartMQSchedule() {
+    public SmartMQScheduler getSmartMQScheduler() {
         return smartMQScheduler;
     }
 
