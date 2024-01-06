@@ -70,7 +70,10 @@ public class RocksDBMessageStore implements MessageStore {
 
     @Override
     public void shutdown() {
-
+        logger.info("关闭 RocksDB 存储服务");
+        if (this.rocksDB != null) {
+            this.rocksDB.close();
+        }
     }
 
     @Override
