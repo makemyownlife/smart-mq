@@ -21,6 +21,11 @@ public interface MessageStore {
     PutMessageResult putMessage(final MessageBrokerInner msg);
 
     /**
+     * Just For Test
+     */
+    void doIteratorForTest();
+
+    /**
      * Shutdown this message store.
      */
     void shutdown();

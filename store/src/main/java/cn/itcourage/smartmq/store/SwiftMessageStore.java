@@ -33,6 +33,11 @@ public class SwiftMessageStore implements MessageStore {
     }
 
     @Override
+    public void doIteratorForTest() {
+
+    }
+
+    @Override
     public void shutdown() {
 
     }

@@ -39,6 +39,7 @@ public class SmartMQScheduler {
         while (!stopped) {
             try {
                 Thread.sleep(500);
+                messageStore.doIteratorForTest();
             } catch (Exception e) {
                 logger.error("dispatchMessage error:", e);
             }

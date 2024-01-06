@@ -3,6 +3,7 @@ package cn.itcourage.smartmq.store;
 import cn.itcourage.smartmq.store.config.MessageStoreConfig;
 import org.rocksdb.Options;
 import org.rocksdb.RocksDB;
+import org.rocksdb.RocksIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,6 +67,23 @@ public class RocksDBMessageStore implements MessageStore {
             logger.error("RocksDB putMessage error:", e);
             return new PutMessageResult(PutMessageStatus.PUT_FAIL);
         }
+    }
+
+    @Override
+    public void doIteratorForTest() {
+        RocksIterator iterator = rocksDB.newIterator();
+        iterator.seekToFirst();
+
+        // Iterate over the key-value pairs
+        while (iterator.isValid()) {
+            byte[] key = iterator.key();
+            byte[] value = iterator.value();
+            // Process the key and value
+            logger.info("Key: " + new String(key) + ", Value: " + new String(value));
+            // Move to the next key-value pair
+            iterator.next();
+        }
+        iterator.close();
     }
 
     @Override
