@@ -8,7 +8,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.nio.ByteBuffer;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 使用 RocksDB 做为延迟消息的存储容器
@@ -26,7 +27,7 @@ public class RocksDBMessageStore implements MessageStore {
 
     private RocksDB rocksDB;
 
-    private ColumnFamilyHandle cfHandle;
+    private ColumnFamilyHandle messageQueueFamilyHandler;
 
     public RocksDBMessageStore(MessageStoreConfig messageStoreConfig) {
         this.messageStoreConfig = messageStoreConfig;
@@ -41,15 +42,25 @@ public class RocksDBMessageStore implements MessageStore {
             if (!file.exists()) {
                 file.mkdirs();
             }
-            Options options = new Options().setCreateIfMissing(true);
-            this.rocksDB = RocksDB.open(options, storeDir);
 
             // 创建列族选项
             final ColumnFamilyOptions cfOptions = new ColumnFamilyOptions().optimizeLevelStyleCompaction();
-            // 创建列族描述符
-            final ColumnFamilyDescriptor cfDescriptor = new ColumnFamilyDescriptor(MESSAGE_COLUMN_FAMILY.getBytes(), cfOptions);
-            // 列族名称数组
-            this.cfHandle = rocksDB.createColumnFamily(cfDescriptor);
+            final List<ColumnFamilyDescriptor> cfDescriptors = Arrays.asList(
+                    new ColumnFamilyDescriptor(RocksDB.DEFAULT_COLUMN_FAMILY, cfOptions),
+                    new ColumnFamilyDescriptor(MESSAGE_COLUMN_FAMILY.getBytes(), cfOptions));
+            List<ColumnFamilyHandle> cfHandles = new ArrayList<>();
+
+            // 创建 rocksDB 实例
+            final DBOptions dbOptions = new DBOptions().setCreateIfMissing(true).setCreateMissingColumnFamilies(true);
+            this.rocksDB = RocksDB.open(dbOptions, storeDir, cfDescriptors, cfHandles);
+
+            this.messageQueueFamilyHandler = cfHandles.stream().filter(x -> {
+                try {
+                    return (new String(x.getName())).equals(MESSAGE_COLUMN_FAMILY);
+                } catch (RocksDBException e) {
+                    return false;
+                }
+            }).collect(Collectors.toList()).get(0);
 
             return true;
         } catch (Exception e) {
@@ -84,7 +95,7 @@ public class RocksDBMessageStore implements MessageStore {
 
             // 写入数据到自定义列族
             WriteOptions writeOptions = new WriteOptions();
-            rocksDB.put(cfHandle, writeOptions, uniqueKey.getBytes(DEFAULT_CHARSET), byteBuffer.array());
+            rocksDB.put(messageQueueFamilyHandler, writeOptions, uniqueKey.getBytes(DEFAULT_CHARSET), byteBuffer.array());
             return new PutMessageResult(PutMessageStatus.PUT_OK);
         } catch (Exception e) {
             logger.error("RocksDB putMessage error:", e);
@@ -94,19 +105,35 @@ public class RocksDBMessageStore implements MessageStore {
 
     @Override
     public void doIteratorForTest() {
-        RocksIterator iterator = rocksDB.newIterator();
-        iterator.seekToFirst();
+        try {
+            RocksIterator iterator = rocksDB.newIterator(messageQueueFamilyHandler);
+            iterator.seekToFirst();
 
-        // Iterate over the key-value pairs
-        while (iterator.isValid()) {
-            byte[] key = iterator.key();
-            byte[] value = iterator.value();
-            // Process the key and value
-            logger.info("Key: " + new String(key) + ", Value: " + new String(value));
-            // Move to the next key-value pair
-            iterator.next();
+            // Iterate over the key-value pairs
+            while (iterator.isValid()) {
+                byte[] key = iterator.key();
+                byte[] value = iterator.value();
+
+                ByteBuffer byteBuffer = ByteBuffer.allocate(value.length);
+                byteBuffer.put(value);
+
+                int bodySize = byteBuffer.getInt();
+                byte[] body = new byte[bodySize];
+                byteBuffer.get(body);
+                int propertiesLength = byteBuffer.getInt();
+                byte[] propertiesBytes = new byte[bodySize];
+                byteBuffer.get(propertiesBytes);
+                Map<String, String> properties = JSON.parseObject(new String(propertiesBytes, DEFAULT_CHARSET), HashMap.class);
+
+                // Process the key and value
+                logger.info("Key: " + new String(key) + ", Value: " + new String(value));
+                // Move to the next key-value pair
+                iterator.next();
+            }
+            iterator.close();
+        } catch (Exception e) {
+            logger.error("doIteratorForTest error: ", e);
         }
-        iterator.close();
     }
 
     @Override
