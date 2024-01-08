@@ -1,13 +1,13 @@
 package cn.itcourage.smartmq.store;
 
 import cn.itcourage.smartmq.store.config.MessageStoreConfig;
-import org.rocksdb.Options;
-import org.rocksdb.RocksDB;
-import org.rocksdb.RocksIterator;
+import com.alibaba.fastjson.JSON;
+import org.rocksdb.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.nio.ByteBuffer;
 import java.util.Map;
 
 /**
@@ -18,11 +18,15 @@ public class RocksDBMessageStore implements MessageStore {
 
     private final static String DEFAULT_CHARSET = "UTF-8";
 
+    private final static String MESSAGE_COLUMN_FAMILY = "messageQueueColumnFamily";
+
     private static String storeDir = System.getProperty("user.home") + File.separator + "rocksDB";
 
     private MessageStoreConfig messageStoreConfig;
 
     private RocksDB rocksDB;
+
+    private ColumnFamilyHandle cfHandle;
 
     public RocksDBMessageStore(MessageStoreConfig messageStoreConfig) {
         this.messageStoreConfig = messageStoreConfig;
@@ -39,6 +43,14 @@ public class RocksDBMessageStore implements MessageStore {
             }
             Options options = new Options().setCreateIfMissing(true);
             this.rocksDB = RocksDB.open(options, storeDir);
+
+            // 创建列族选项
+            final ColumnFamilyOptions cfOptions = new ColumnFamilyOptions().optimizeLevelStyleCompaction();
+            // 创建列族描述符
+            final ColumnFamilyDescriptor cfDescriptor = new ColumnFamilyDescriptor(MESSAGE_COLUMN_FAMILY.getBytes(), cfOptions);
+            // 列族名称数组
+            this.cfHandle = rocksDB.createColumnFamily(cfDescriptor);
+
             return true;
         } catch (Exception e) {
             logger.error("load error:", e);
@@ -55,13 +67,24 @@ public class RocksDBMessageStore implements MessageStore {
     @Override
     public PutMessageResult putMessage(final MessageBrokerInner messageBrokerInner) {
         try {
-            // 存储 body 和 properties 两个属性
-            // RowKey的设计规则是：timestamp + msgId
+            // 存储 body 和 properties 两个属性 RowKey的设计规则是：timestamp + msgId
             String messageId = messageBrokerInner.getMessageId();
             Map<String, String> properties = messageBrokerInner.getProperties();
+            byte[] body = messageBrokerInner.getBody();
             Long delayTime = messageBrokerInner.getDelayTime();
             String uniqueKey = String.valueOf(delayTime) + messageId;
-            rocksDB.put(uniqueKey.getBytes(DEFAULT_CHARSET), messageBrokerInner.getBody());
+
+            //组装写入的字节数组
+            byte[] propertiesBytes = JSON.toJSONString(properties).getBytes(DEFAULT_CHARSET);
+            ByteBuffer byteBuffer = ByteBuffer.allocate(8 + body.length + 8 + propertiesBytes.length);
+            byteBuffer.putInt(body.length);
+            byteBuffer.put(body);
+            byteBuffer.putInt(propertiesBytes.length);
+            byteBuffer.put(propertiesBytes);
+
+            // 写入数据到自定义列族
+            WriteOptions writeOptions = new WriteOptions();
+            rocksDB.put(cfHandle, writeOptions, uniqueKey.getBytes(DEFAULT_CHARSET), byteBuffer.array());
             return new PutMessageResult(PutMessageStatus.PUT_OK);
         } catch (Exception e) {
             logger.error("RocksDB putMessage error:", e);
