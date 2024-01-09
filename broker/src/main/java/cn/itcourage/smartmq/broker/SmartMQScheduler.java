@@ -1,8 +1,11 @@
 package cn.itcourage.smartmq.broker;
 
+import cn.itcourage.smartmq.store.MessageBrokerInner;
 import cn.itcourage.smartmq.store.MessageStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * SmartMQ 消息调度器
@@ -13,6 +16,8 @@ public class SmartMQScheduler {
     private final static Logger logger = LoggerFactory.getLogger(SmartMQScheduler.class);
 
     protected volatile boolean stopped = false;
+
+    private final int batchSize = 5;
 
     private MessageStore messageStore;
 
@@ -38,8 +43,9 @@ public class SmartMQScheduler {
     private void doSchedule() {
         while (!stopped) {
             try {
-                Thread.sleep(500);
-                messageStore.doIteratorForTest();
+                // 每隔 20 毫秒扫描一次存储
+                Thread.sleep(20);
+                List<MessageBrokerInner> messageBrokerInnerList = messageStore.selectMessagesByOffset(null, batchSize);
             } catch (Exception e) {
                 logger.error("dispatchMessage error:", e);
             }
