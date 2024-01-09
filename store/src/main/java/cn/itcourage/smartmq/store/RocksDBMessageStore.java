@@ -87,11 +87,12 @@ public class RocksDBMessageStore implements MessageStore {
 
             //组装写入的字节数组
             byte[] propertiesBytes = JSON.toJSONString(properties).getBytes(DEFAULT_CHARSET);
-            ByteBuffer byteBuffer = ByteBuffer.allocate(8 + body.length + 8 + propertiesBytes.length);
+            ByteBuffer byteBuffer = ByteBuffer.allocate(4 + body.length + 4 + propertiesBytes.length);
             byteBuffer.putInt(body.length);
             byteBuffer.put(body);
             byteBuffer.putInt(propertiesBytes.length);
             byteBuffer.put(propertiesBytes);
+            byteBuffer.flip();
 
             // 写入数据到自定义列族
             WriteOptions writeOptions = new WriteOptions();
@@ -116,17 +117,18 @@ public class RocksDBMessageStore implements MessageStore {
 
                 ByteBuffer byteBuffer = ByteBuffer.allocate(value.length);
                 byteBuffer.put(value);
+                byteBuffer.flip();
 
                 int bodySize = byteBuffer.getInt();
                 byte[] body = new byte[bodySize];
                 byteBuffer.get(body);
                 int propertiesLength = byteBuffer.getInt();
-                byte[] propertiesBytes = new byte[bodySize];
+                byte[] propertiesBytes = new byte[propertiesLength];
                 byteBuffer.get(propertiesBytes);
                 Map<String, String> properties = JSON.parseObject(new String(propertiesBytes, DEFAULT_CHARSET), HashMap.class);
 
                 // Process the key and value
-                logger.info("Key: " + new String(key) + ", Value: " + new String(value));
+                logger.info("Key: " + new String(key) + ", Value: [" + new String(body, DEFAULT_CHARSET) + "] properties:" + properties);
                 // Move to the next key-value pair
                 iterator.next();
             }
