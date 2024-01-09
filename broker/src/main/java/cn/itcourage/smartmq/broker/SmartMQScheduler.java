@@ -1,5 +1,6 @@
 package cn.itcourage.smartmq.broker;
 
+import cn.itcourage.smartmq.adapter.core.spi.SmartMQProducer;
 import cn.itcourage.smartmq.store.MessageBrokerInner;
 import cn.itcourage.smartmq.store.MessageStore;
 import org.slf4j.Logger;
@@ -21,10 +22,13 @@ public class SmartMQScheduler {
 
     private MessageStore messageStore;
 
+    private SmartMQProducer smartMQProducer;
+
     private final Thread schedulerThread;
 
     public SmartMQScheduler(SmartMQController smartMQController) {
         this.messageStore = smartMQController.getMessageStore();
+        this.smartMQProducer = smartMQController.getSmartMQAdapter().createAndGetProducer();
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -46,6 +50,11 @@ public class SmartMQScheduler {
                 // 每隔 20 毫秒扫描一次存储
                 Thread.sleep(20);
                 List<MessageBrokerInner> messageBrokerInnerList = messageStore.selectMessagesByOffset(null, batchSize);
+                for (MessageBrokerInner messageBrokerInner : messageBrokerInnerList) {
+                    // 判断是否到期了
+                    // 若可以发送，则发送消息到目的 Broker 集群
+                }
+                // 修改发送过的消息编号
             } catch (Exception e) {
                 logger.error("dispatchMessage error:", e);
             }

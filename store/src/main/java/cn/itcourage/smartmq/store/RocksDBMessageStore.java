@@ -119,7 +119,7 @@ public class RocksDBMessageStore implements MessageStore {
                 iterator.seekToFirst();
             }
 
-            while (iterator.isValid() || count < size) {
+            while (iterator.isValid() && count < size) {
                 byte[] keyBytes = iterator.key();
                 String key = new String(keyBytes, DEFAULT_CHARSET);
                 Long delayTime = Long.valueOf(key.split(MESSAGE_ID_SEPERATOR)[0]);
