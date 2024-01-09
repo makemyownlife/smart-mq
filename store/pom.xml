@@ -31,6 +31,12 @@
         </dependency>
 
         <dependency>
+            <groupId>cn.itcourage.smartmq</groupId>
+            <artifactId>smart-mq-adapter.core</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
         </dependency>

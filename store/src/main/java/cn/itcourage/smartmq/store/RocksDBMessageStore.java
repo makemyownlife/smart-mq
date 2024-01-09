@@ -1,5 +1,6 @@
 package cn.itcourage.smartmq.store;
 
+import cn.itcourage.smartmq.adapter.core.util.SmartMQAdapterConstants;
 import cn.itcourage.smartmq.store.config.MessageStoreConfig;
 import com.alibaba.fastjson.JSON;
 import org.rocksdb.*;
@@ -20,6 +21,8 @@ public class RocksDBMessageStore implements MessageStore {
     private final static String DEFAULT_CHARSET = "UTF-8";
 
     private final static String MESSAGE_COLUMN_FAMILY = "messageQueueColumnFamily";
+
+    private final static String MESSAGE_ID_SEPERATOR = "@";
 
     private static String storeDir = System.getProperty("user.home") + File.separator + "rocksDB";
 
@@ -81,7 +84,7 @@ public class RocksDBMessageStore implements MessageStore {
             Map<String, String> properties = messageBrokerInner.getProperties();
             byte[] body = messageBrokerInner.getBody();
             Long delayTime = messageBrokerInner.getDelayTime();
-            String uniqueKey = String.valueOf(delayTime) + messageId;
+            String uniqueKey = String.valueOf(delayTime) + MESSAGE_ID_SEPERATOR + messageId;
 
             //组装写入的字节数组
             byte[] propertiesBytes = JSON.toJSONString(properties).getBytes(DEFAULT_CHARSET);
@@ -105,16 +108,22 @@ public class RocksDBMessageStore implements MessageStore {
     @Override
     public List<MessageBrokerInner> selectMessagesByOffset(String startKey, int size) {
         List<MessageBrokerInner> messageList = new ArrayList<>(size);
+        RocksIterator iterator = null;
         try {
-            RocksIterator iterator = rocksDB.newIterator(messageQueueFamilyHandler);
+            int count = 0;
+            iterator = rocksDB.newIterator(messageQueueFamilyHandler);
             iterator.seekForPrev(startKey.getBytes(DEFAULT_CHARSET));
 
-            while (iterator.isValid()) {
-                byte[] key = iterator.key();
-                byte[] value = iterator.value();
+            while (iterator.isValid() || count < size) {
+                byte[] keyBytes = iterator.key();
+                String key = new String(keyBytes, DEFAULT_CHARSET);
+                Long delayTime = Long.valueOf(key.split(MESSAGE_ID_SEPERATOR)[0]);
+                String messageId = key.split(MESSAGE_ID_SEPERATOR)[1];
 
-                ByteBuffer byteBuffer = ByteBuffer.allocate(value.length);
-                byteBuffer.put(value);
+                byte[] valueBytes = iterator.value();
+
+                ByteBuffer byteBuffer = ByteBuffer.allocate(valueBytes.length);
+                byteBuffer.put(valueBytes);
                 byteBuffer.flip();
 
                 int bodySize = byteBuffer.getInt();
@@ -123,17 +132,21 @@ public class RocksDBMessageStore implements MessageStore {
                 int propertiesLength = byteBuffer.getInt();
                 byte[] propertiesBytes = new byte[propertiesLength];
                 byteBuffer.get(propertiesBytes);
-                Map<String, String> properties = JSON.parseObject(
-                        new String(propertiesBytes, DEFAULT_CHARSET),
-                        HashMap.class
-                );
+                Map<String, String> properties = JSON.parseObject(new String(propertiesBytes, DEFAULT_CHARSET), HashMap.class);
+
+                MessageBrokerInner messageBrokerInner = new MessageBrokerInner(properties.get(SmartMQAdapterConstants.DEST_TOPIC), messageId, body, properties, delayTime);
+                messageList.add(messageBrokerInner);
 
                 // Move to the next key-value pair
                 iterator.next();
+                count++;
             }
-            iterator.close();
         } catch (Exception e) {
             logger.error("doIteratorForTest error: ", e);
+        } finally {
+            if (iterator != null) {
+                iterator.close();
+            }
         }
         return messageList;
     }
