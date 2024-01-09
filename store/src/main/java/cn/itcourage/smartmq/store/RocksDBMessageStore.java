@@ -3,6 +3,7 @@ package cn.itcourage.smartmq.store;
 import cn.itcourage.smartmq.adapter.core.util.SmartMQAdapterConstants;
 import cn.itcourage.smartmq.store.config.MessageStoreConfig;
 import com.alibaba.fastjson.JSON;
+import org.apache.commons.lang3.StringUtils;
 import org.rocksdb.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,7 +113,11 @@ public class RocksDBMessageStore implements MessageStore {
         try {
             int count = 0;
             iterator = rocksDB.newIterator(messageQueueFamilyHandler);
-            iterator.seekForPrev(startKey.getBytes(DEFAULT_CHARSET));
+            if (StringUtils.isNotEmpty(startKey)) {
+                iterator.seekForPrev(startKey.getBytes(DEFAULT_CHARSET));
+            }else {
+                iterator.seekToFirst();
+            }
 
             while (iterator.isValid() || count < size) {
                 byte[] keyBytes = iterator.key();
