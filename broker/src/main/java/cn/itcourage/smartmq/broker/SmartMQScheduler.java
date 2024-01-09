@@ -54,7 +54,7 @@ public class SmartMQScheduler {
                     // 判断是否到期了
                     // 若可以发送，则发送消息到目的 Broker 集群
                 }
-                // 修改发送过的消息编号
+                // 修改发送过的消息偏移量 
             } catch (Exception e) {
                 logger.error("dispatchMessage error:", e);
             }
