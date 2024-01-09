@@ -45,9 +45,7 @@ public class RocksDBMessageStore implements MessageStore {
 
             // 创建列族选项
             final ColumnFamilyOptions cfOptions = new ColumnFamilyOptions().optimizeLevelStyleCompaction();
-            final List<ColumnFamilyDescriptor> cfDescriptors = Arrays.asList(
-                    new ColumnFamilyDescriptor(RocksDB.DEFAULT_COLUMN_FAMILY, cfOptions),
-                    new ColumnFamilyDescriptor(MESSAGE_COLUMN_FAMILY.getBytes(), cfOptions));
+            final List<ColumnFamilyDescriptor> cfDescriptors = Arrays.asList(new ColumnFamilyDescriptor(RocksDB.DEFAULT_COLUMN_FAMILY, cfOptions), new ColumnFamilyDescriptor(MESSAGE_COLUMN_FAMILY.getBytes(), cfOptions));
             List<ColumnFamilyHandle> cfHandles = new ArrayList<>();
 
             // 创建 rocksDB 实例
@@ -102,6 +100,42 @@ public class RocksDBMessageStore implements MessageStore {
             logger.error("RocksDB putMessage error:", e);
             return new PutMessageResult(PutMessageStatus.PUT_FAIL);
         }
+    }
+
+    @Override
+    public List<MessageBrokerInner> selectMessagesByOffset(String startKey, int size) {
+        List<MessageBrokerInner> messageList = new ArrayList<>(size);
+        try {
+            RocksIterator iterator = rocksDB.newIterator(messageQueueFamilyHandler);
+            iterator.seekForPrev(startKey.getBytes(DEFAULT_CHARSET));
+
+            while (iterator.isValid()) {
+                byte[] key = iterator.key();
+                byte[] value = iterator.value();
+
+                ByteBuffer byteBuffer = ByteBuffer.allocate(value.length);
+                byteBuffer.put(value);
+                byteBuffer.flip();
+
+                int bodySize = byteBuffer.getInt();
+                byte[] body = new byte[bodySize];
+                byteBuffer.get(body);
+                int propertiesLength = byteBuffer.getInt();
+                byte[] propertiesBytes = new byte[propertiesLength];
+                byteBuffer.get(propertiesBytes);
+                Map<String, String> properties = JSON.parseObject(
+                        new String(propertiesBytes, DEFAULT_CHARSET),
+                        HashMap.class
+                );
+
+                // Move to the next key-value pair
+                iterator.next();
+            }
+            iterator.close();
+        } catch (Exception e) {
+            logger.error("doIteratorForTest error: ", e);
+        }
+        return messageList;
     }
 
     @Override

@@ -2,6 +2,8 @@ package cn.itcourage.smartmq.store;
 
 import org.rocksdb.RocksDBException;
 
+import java.util.List;
+
 public interface MessageStore {
 
     /**
@@ -19,6 +21,8 @@ public interface MessageStore {
     void start() throws Exception;
 
     PutMessageResult putMessage(final MessageBrokerInner msg);
+
+    List<MessageBrokerInner> selectMessagesByOffset(String firstKey, int size);
 
     /**
      * Just For Test

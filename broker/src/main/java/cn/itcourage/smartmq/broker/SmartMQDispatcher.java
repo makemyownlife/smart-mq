@@ -66,7 +66,6 @@ public class SmartMQDispatcher {
                         );
                         messageStore.putMessage(messageBrokerInner);
                     }
-                    //将消息批量封装后,生成。
                     smartMQConsumer.ack();
                 }
             } catch (Exception e) {

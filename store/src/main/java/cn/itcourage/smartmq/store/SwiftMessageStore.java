@@ -4,6 +4,8 @@ import cn.itcourage.smartmq.store.config.MessageStoreConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 /**
  * 参考消息队列 QMQ 自定义延迟消息存储
  */
@@ -29,6 +31,11 @@ public class SwiftMessageStore implements MessageStore {
 
     @Override
     public PutMessageResult putMessage(MessageBrokerInner msg) {
+        return null;
+    }
+
+    @Override
+    public List<MessageBrokerInner> selectMessagesByOffset(String firstKey, int size) {
         return null;
     }
 
