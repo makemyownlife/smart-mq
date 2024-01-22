@@ -53,6 +53,7 @@ public class SmartMQDispatcher {
 
     private void dispatchMessages() {
         while (!stopped) {
+            boolean hasException = false;
             try {
                 List<CommonMessage> messageList = smartMQConsumer.getMessage(30L, TimeUnit.SECONDS);
                 if (CollectionUtils.isNotEmpty(messageList)) {
@@ -74,6 +75,9 @@ public class SmartMQDispatcher {
                 }
             } catch (Exception e) {
                 logger.error("dispatchMessage error:", e);
+                hasException = true;
+            }
+            if (hasException) {
                 // 若失败，则采取回滚的策略
                 smartMQConsumer.rollback();
             }
