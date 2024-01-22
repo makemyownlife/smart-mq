@@ -70,6 +70,8 @@ public class SmartMQDispatcher {
                 }
             } catch (Exception e) {
                 logger.error("dispatchMessage error:", e);
+                // 若失败，则采取回滚的策略
+                smartMQConsumer.rollback();
             }
         }
     }
