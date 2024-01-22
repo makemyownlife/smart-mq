@@ -6,6 +6,7 @@ import cn.itcourage.smartmq.adapter.core.util.SmartMQAdapterConstants;
 import cn.itcourage.smartmq.common.timer.utils.CollectionUtils;
 import cn.itcourage.smartmq.store.MessageBrokerInner;
 import cn.itcourage.smartmq.store.MessageStore;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,15 +57,18 @@ public class SmartMQDispatcher {
                 List<CommonMessage> messageList = smartMQConsumer.getMessage(30L, TimeUnit.SECONDS);
                 if (CollectionUtils.isNotEmpty(messageList)) {
                     for (CommonMessage commonMessage : messageList) {
-                        Long delayTime = Long.valueOf(commonMessage.getProperties().get(SmartMQAdapterConstants.DELAY_TIME));
-                        MessageBrokerInner messageBrokerInner = new MessageBrokerInner(
-                                commonMessage.getTopic(),
-                                commonMessage.getMessageId(),
-                                commonMessage.getBody(),
-                                commonMessage.getProperties(),
-                                delayTime
-                        );
-                        messageStore.putMessage(messageBrokerInner);
+                        String rawDelayTime = commonMessage.getProperties().get(SmartMQAdapterConstants.DELAY_TIME);
+                        if (StringUtils.isNotEmpty(rawDelayTime)) {
+                            Long delayTime = Long.valueOf(rawDelayTime);
+                            MessageBrokerInner messageBrokerInner = new MessageBrokerInner(
+                                    commonMessage.getTopic(),
+                                    commonMessage.getMessageId(),
+                                    commonMessage.getBody(),
+                                    commonMessage.getProperties(),
+                                    delayTime
+                            );
+                            messageStore.putMessage(messageBrokerInner);
+                        }
                     }
                     smartMQConsumer.ack();
                 }
