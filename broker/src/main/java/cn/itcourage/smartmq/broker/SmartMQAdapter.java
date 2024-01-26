@@ -49,6 +49,7 @@ public class SmartMQAdapter {
             );
             smartMQConsumer.start();
             Thread.currentThread().setContextClassLoader(cl);
+            logger.info("MQ消费者创建成功");
         }
         return smartMQConsumer;
     }
@@ -70,6 +71,7 @@ public class SmartMQAdapter {
             );
             smartMQProducer.start();
             Thread.currentThread().setContextClassLoader(cl);
+            logger.info("MQ生产者创建成功");
         }
         return smartMQProducer;
     }
