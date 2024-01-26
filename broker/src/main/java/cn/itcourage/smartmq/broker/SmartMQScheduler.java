@@ -28,7 +28,7 @@ public class SmartMQScheduler {
 
     public SmartMQScheduler(SmartMQController smartMQController) {
         this.messageStore = smartMQController.getMessageStore();
-        this.smartMQProducer = smartMQController.getSmartMQAdapter().createAndGetProducer();
+        this.smartMQProducer = smartMQController.getSmartMQAdapter().createAndGetMQProducerInstance();
         Runnable runnable = new Runnable() {
             @Override
             public void run() {

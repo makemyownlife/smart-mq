@@ -53,8 +53,25 @@ public class SmartMQAdapter {
         return smartMQConsumer;
     }
 
-    public SmartMQProducer createAndGetProducer() {
-        return null;
+    public SmartMQProducer createAndGetMQProducerInstance() {
+        ExtensionLoader<SmartMQProducer> loader = ExtensionLoader.getExtensionLoader(SmartMQProducer.class);
+        SmartMQProducer smartMQProducer = loader.getExtension(
+                smartMQConfig.getConsumer().getType(),
+                CONNECTOR_SPI_DIR,
+                CONNECTOR_STANDBY_SPI_DIR
+        );
+        if (smartMQProducer != null) {
+            Properties properties = new Properties();
+            properties.putAll(smartMQConfig.getProps());
+            ClassLoader cl = Thread.currentThread().getContextClassLoader();
+            Thread.currentThread().setContextClassLoader(smartMQProducer.getClass().getClassLoader());
+            smartMQProducer.init(
+                    properties
+            );
+            smartMQProducer.start();
+            Thread.currentThread().setContextClassLoader(cl);
+        }
+        return smartMQProducer;
     }
 
     public void shutdown() {
