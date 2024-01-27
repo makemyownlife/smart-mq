@@ -69,6 +69,8 @@ public class SmartMQDispatcher {
                                     delayTime
                             );
                             messageStore.putMessage(messageBrokerInner);
+                        } else {
+                            logger.warn("消息编号：[" + commonMessage.getMessageId() + "]没有延迟时间字段，不予处理!");
                         }
                     }
                     smartMQConsumer.ack();

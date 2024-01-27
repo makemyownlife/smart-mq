@@ -1,9 +1,15 @@
 package cn.itcourage.smartmq.adapter.rocketmq.producer;
 
+import cn.itcourage.smartmq.adapter.core.consumer.CommonMessage;
+import cn.itcourage.smartmq.adapter.core.producer.ProducerMessage;
 import cn.itcourage.smartmq.adapter.core.spi.SPI;
 import cn.itcourage.smartmq.adapter.core.spi.SmartMQProducer;
+import cn.itcourage.smartmq.adapter.core.util.Callback;
 import cn.itcourage.smartmq.adapter.rocketmq.config.RocketMQConstants;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
+import org.apache.rocketmq.client.producer.SendResult;
+import org.apache.rocketmq.client.producer.SendStatus;
+import org.apache.rocketmq.common.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +39,29 @@ public class SmartMQRocketMQProducer implements SmartMQProducer {
             this.defaultMQProducer.start();
         } catch (Exception e) {
             logger.error("SmartMQRocketMQProducer start error:", e);
+        }
+    }
+
+    @Override
+    public void sendMessage(CommonMessage commonMessage, Callback callback) {
+        boolean sendSuccess = false;
+        try {
+            Message message = new Message();
+            message.setTopic(commonMessage.getTopic());
+            message.setBody(commonMessage.getBody());
+            SendResult sendResult = defaultMQProducer.send(message);
+            if (sendResult != null) {
+                if (sendResult.getSendStatus() == SendStatus.SEND_OK) {
+                    sendSuccess = true;
+                }
+            }
+            if (sendSuccess) {
+                callback.commit();
+            } else {
+                callback.rollback();
+            }
+        } catch (Exception e) {
+            logger.error("sendMessage error: ", e);
         }
     }
 

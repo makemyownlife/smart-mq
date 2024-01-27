@@ -48,11 +48,14 @@ public class SmartMQScheduler {
         while (!stopped) {
             try {
                 // 每隔 20 毫秒扫描一次存储
-                Thread.sleep(20);
+                Thread.sleep(10);
+                Long currentTime = System.currentTimeMillis();
                 List<MessageBrokerInner> messageBrokerInnerList = messageStore.selectMessagesByOffset(null, batchSize);
                 for (MessageBrokerInner messageBrokerInner : messageBrokerInnerList) {
                     // 判断是否到期了
-                    // 若可以发送，则发送消息到目的 Broker 集群
+                    if(currentTime >= messageBrokerInner.getDelayTime()) {
+                        //若可以发送，则发送消息到目的 Broker 集群
+                    }
                 }
                 // 修改发送过的消息偏移量 
             } catch (Exception e) {
