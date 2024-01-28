@@ -1,6 +1,8 @@
 package cn.itcourage.smartmq.broker;
 
+import cn.itcourage.smartmq.adapter.core.consumer.CommonMessage;
 import cn.itcourage.smartmq.adapter.core.spi.SmartMQProducer;
+import cn.itcourage.smartmq.adapter.core.util.Callback;
 import cn.itcourage.smartmq.store.MessageBrokerInner;
 import cn.itcourage.smartmq.store.MessageStore;
 import org.slf4j.Logger;
@@ -53,8 +55,26 @@ public class SmartMQScheduler {
                 List<MessageBrokerInner> messageBrokerInnerList = messageStore.selectMessagesByOffset(null, batchSize);
                 for (MessageBrokerInner messageBrokerInner : messageBrokerInnerList) {
                     // 判断是否到期了
-                    if(currentTime >= messageBrokerInner.getDelayTime()) {
+                    if (currentTime >= messageBrokerInner.getDelayTime()) {
                         //若可以发送，则发送消息到目的 Broker 集群
+                        CommonMessage commonMessage = new CommonMessage(
+                                messageBrokerInner.getTopic(),
+                                messageBrokerInner.getMessageId(),
+                                messageBrokerInner.getBody(),
+                                messageBrokerInner.getProperties()
+                        );
+
+                        smartMQProducer.sendMessage(commonMessage, new Callback() {
+                            @Override
+                            public void commit() {
+
+                            }
+
+                            @Override
+                            public void rollback() {
+
+                            }
+                        });
                     }
                 }
                 // 修改发送过的消息偏移量 

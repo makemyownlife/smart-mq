@@ -1,7 +1,6 @@
 package cn.itcourage.smartmq.adapter.rocketmq.producer;
 
 import cn.itcourage.smartmq.adapter.core.consumer.CommonMessage;
-import cn.itcourage.smartmq.adapter.core.producer.ProducerMessage;
 import cn.itcourage.smartmq.adapter.core.spi.SPI;
 import cn.itcourage.smartmq.adapter.core.spi.SmartMQProducer;
 import cn.itcourage.smartmq.adapter.core.util.Callback;
@@ -13,6 +12,7 @@ import org.apache.rocketmq.common.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
 import java.util.Properties;
 
 @SPI(value = "rocketmq")
@@ -21,6 +21,8 @@ public class SmartMQRocketMQProducer implements SmartMQProducer {
     private static final Logger logger = LoggerFactory.getLogger(SmartMQRocketMQProducer.class);
 
     private static final String MQ_PRODUCER_GROUP = "smartMQProduerGroup";
+
+    private static final String PROPERTIES_TAGS = "TAGS";
 
     private DefaultMQProducer defaultMQProducer;
 
