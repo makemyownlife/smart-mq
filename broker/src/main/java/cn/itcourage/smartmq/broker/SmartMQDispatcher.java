@@ -69,6 +69,7 @@ public class SmartMQDispatcher {
                                     delayTime
                             );
                             messageStore.putMessage(messageBrokerInner);
+                            logger.warn("消息编号：[" + commonMessage.getMessageId() + "]已被存储在存储引擎中");
                         } else {
                             logger.warn("消息编号：[" + commonMessage.getMessageId() + "]没有延迟时间字段，不予处理!");
                         }

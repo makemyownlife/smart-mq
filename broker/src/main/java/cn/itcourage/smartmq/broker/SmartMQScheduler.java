@@ -54,6 +54,7 @@ public class SmartMQScheduler {
                 Long currentTime = System.currentTimeMillis();
                 List<MessageBrokerInner> messageBrokerInnerList = messageStore.selectMessagesByOffset(null, batchSize);
                 for (MessageBrokerInner messageBrokerInner : messageBrokerInnerList) {
+                    logger.info("待处理消息:" + messageBrokerInner.getMessageId() + " delayTime:" + messageBrokerInner.getDelayTime());
                     // 判断是否到期了
                     if (currentTime >= messageBrokerInner.getDelayTime()) {
                         //若可以发送，则发送消息到目的 Broker 集群
@@ -63,7 +64,7 @@ public class SmartMQScheduler {
                                 messageBrokerInner.getBody(),
                                 messageBrokerInner.getProperties()
                         );
-
+                        logger.info("开始发送");
                         smartMQProducer.sendMessage(commonMessage, new Callback() {
                             @Override
                             public void commit() {

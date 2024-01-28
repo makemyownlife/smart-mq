@@ -25,10 +25,10 @@ public class RocketMQProducerUnitTest {
         DefaultMQProducer producer = new DefaultMQProducer("testGroup");
         producer.setNamesrvAddr(NAMESRVADDR);
         producer.start();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1; i++) {
             Message msg = new Message(TOPIC, tag, ("Hello RocketMQ 我的你的" + i).getBytes(RemotingHelper.DEFAULT_CHARSET));
             msg.putUserProperty(SmartMQAdapterConstants.DEST_TOPIC, "order-topic");
-            msg.putUserProperty(SmartMQAdapterConstants.DELAY_TIME, String.valueOf(System.currentTimeMillis() + 1000 * 30L));
+            msg.putUserProperty(SmartMQAdapterConstants.DELAY_TIME, String.valueOf(System.currentTimeMillis() + 1000 * 60L));
             SendResult sendResult = producer.send(msg);
             System.out.println(JSON.toJSONString(sendResult));
         }

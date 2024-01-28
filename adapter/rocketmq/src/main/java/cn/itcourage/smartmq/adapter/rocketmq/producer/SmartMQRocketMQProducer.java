@@ -5,6 +5,7 @@ import cn.itcourage.smartmq.adapter.core.spi.SPI;
 import cn.itcourage.smartmq.adapter.core.spi.SmartMQProducer;
 import cn.itcourage.smartmq.adapter.core.util.Callback;
 import cn.itcourage.smartmq.adapter.rocketmq.config.RocketMQConstants;
+import com.alibaba.fastjson.JSON;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.client.producer.SendStatus;
@@ -52,6 +53,7 @@ public class SmartMQRocketMQProducer implements SmartMQProducer {
             message.setTopic(commonMessage.getTopic());
             message.setBody(commonMessage.getBody());
             SendResult sendResult = defaultMQProducer.send(message);
+            logger.info("sendResult:" + JSON.toJSONString(sendResult));
             if (sendResult != null) {
                 if (sendResult.getSendStatus() == SendStatus.SEND_OK) {
                     sendSuccess = true;
