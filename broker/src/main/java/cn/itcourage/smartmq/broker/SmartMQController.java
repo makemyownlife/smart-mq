@@ -34,7 +34,7 @@ public class SmartMQController {
     private SmartMQScheduler smartMQScheduler;
 
     // 默认初始化是：Master同步模式
-    private BrokerRole brokerRole = BrokerRole.SYNC_MASTER;
+    private BrokerRole brokerRole = BrokerRole.MASTER;
 
     // 1. 启动本地存储。
     // 2. 读取两种 standalone 独立运行模式，还是 zookeeper 高可用模式。
@@ -53,7 +53,7 @@ public class SmartMQController {
         this.messageStore.start();
         // 2. 判断当前Broker的角色
         if (ConfigConstants.STANDALONE_MODE.equals(this.smartMQConfig.getRunmode())) {
-            this.brokerRole = BrokerRole.SYNC_MASTER;
+            this.brokerRole = BrokerRole.MASTER;
         } else {
             // 通过 zookeeper 来抢占最小节点 判断是否是 Master or Slave
             this.brokerRole = BrokerRole.SLAVE;
