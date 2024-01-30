@@ -1,6 +1,7 @@
 package cn.itcourage.smartmq.broker;
 
 import cn.itcourage.smartmq.adapter.core.consumer.CommonMessage;
+import cn.itcourage.smartmq.adapter.core.producer.ProducerSendStatus;
 import cn.itcourage.smartmq.adapter.core.spi.SmartMQProducer;
 import cn.itcourage.smartmq.adapter.core.util.Callback;
 import cn.itcourage.smartmq.store.MessageBrokerInner;
@@ -71,15 +72,13 @@ public class SmartMQScheduler {
                         messageBrokerInner.getBody(),
                         messageBrokerInner.getProperties()
                 );
-                smartMQProducer.sendMessage(commonMessage, new Callback() {
-                    @Override
-                    public void commit() {
-                    }
-
-                    @Override
-                    public void rollback() {
-                    }
-                });
+                ProducerSendStatus producerSendStatus = smartMQProducer.sendMessage(commonMessage);
+                if (producerSendStatus == ProducerSendStatus.SEND_OK) {
+                    // 提交偏移量
+                } else {
+                    // 发送失败，则停止循环
+                    break;
+                }
             }
         }
     }

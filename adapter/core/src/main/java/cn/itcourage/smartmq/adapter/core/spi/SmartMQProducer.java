@@ -1,6 +1,7 @@
 package cn.itcourage.smartmq.adapter.core.spi;
 
 import cn.itcourage.smartmq.adapter.core.consumer.CommonMessage;
+import cn.itcourage.smartmq.adapter.core.producer.ProducerSendStatus;
 import cn.itcourage.smartmq.adapter.core.util.Callback;
 
 import java.util.Properties;
@@ -12,7 +13,7 @@ public interface SmartMQProducer {
 
     void start();
 
-    void sendMessage(CommonMessage commonMessage, Callback callback);
+    ProducerSendStatus sendMessage(CommonMessage commonMessage);
 
     void stop();
 

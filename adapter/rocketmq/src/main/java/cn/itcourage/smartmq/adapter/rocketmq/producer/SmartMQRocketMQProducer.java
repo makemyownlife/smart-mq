@@ -1,6 +1,7 @@
 package cn.itcourage.smartmq.adapter.rocketmq.producer;
 
 import cn.itcourage.smartmq.adapter.core.consumer.CommonMessage;
+import cn.itcourage.smartmq.adapter.core.producer.ProducerSendStatus;
 import cn.itcourage.smartmq.adapter.core.spi.SPI;
 import cn.itcourage.smartmq.adapter.core.spi.SmartMQProducer;
 import cn.itcourage.smartmq.adapter.core.util.Callback;
@@ -46,7 +47,7 @@ public class SmartMQRocketMQProducer implements SmartMQProducer {
     }
 
     @Override
-    public void sendMessage(CommonMessage commonMessage, Callback callback) {
+    public ProducerSendStatus sendMessage(CommonMessage commonMessage) {
         boolean sendSuccess = false;
         try {
             Message message = new Message();
@@ -59,13 +60,13 @@ public class SmartMQRocketMQProducer implements SmartMQProducer {
                     sendSuccess = true;
                 }
             }
-            if (sendSuccess) {
-                callback.commit();
-            } else {
-                callback.rollback();
-            }
         } catch (Exception e) {
             logger.error("sendMessage error: ", e);
+        }
+        if (sendSuccess) {
+            return ProducerSendStatus.SEND_OK;
+        } else {
+            return ProducerSendStatus.SEND_FAIL.SEND_OK;
         }
     }
 
