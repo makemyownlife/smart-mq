@@ -93,14 +93,14 @@ public class SmartMQController {
     //4.关闭RPC服务。
     //5.关闭本地存储
     public synchronized void shutdown() throws Exception {
-        if (this.messageStore != null) {
-            this.messageStore.shutdown();
-        }
         if (this.smartMQDispatcher != null) {
             this.smartMQDispatcher.shutdown();
         }
         if (this.smartMQScheduler != null) {
             this.smartMQScheduler.shutdown();
+        }
+        if (this.messageStore != null) {
+            this.messageStore.shutdown();
         }
     }
 
