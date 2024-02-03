@@ -3,7 +3,6 @@ package cn.itcourage.smartmq.broker;
 import cn.itcourage.smartmq.adapter.core.consumer.CommonMessage;
 import cn.itcourage.smartmq.adapter.core.producer.ProducerSendStatus;
 import cn.itcourage.smartmq.adapter.core.spi.SmartMQProducer;
-import cn.itcourage.smartmq.adapter.core.util.Callback;
 import cn.itcourage.smartmq.store.MessageBrokerInner;
 import cn.itcourage.smartmq.store.MessageStore;
 import org.slf4j.Logger;

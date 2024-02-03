@@ -7,6 +7,13 @@ public class LocalFileOffsetStore implements OffsetStore {
 
     private final static Logger logger = LoggerFactory.getLogger(LocalFileOffsetStore.class);
 
-    
+    @Override
+    public void load() {
+
+    }
+
+    @Override
+    public void updateOffset(String commitKey) {
+    }
 
 }

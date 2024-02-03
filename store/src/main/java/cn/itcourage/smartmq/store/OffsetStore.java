@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
  */
 public interface OffsetStore {
 
+    void load();
 
+    void updateOffset(String commitKey);
 
 }
