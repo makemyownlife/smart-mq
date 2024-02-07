@@ -156,9 +156,6 @@
                         <exclude>**/*.properties</exclude>
                         <exclude>**/*.xml</exclude>
                         <exclude>**/*.yml</exclude>
-                        <exclude>static/**</exclude>
-                        <exclude>public/**</exclude>
-                        <exclude>templates/**</exclude>
                     </excludes>
                 </configuration>
             </plugin>

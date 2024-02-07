@@ -26,11 +26,10 @@
             <directory>./src/main/resources</directory>
             <outputDirectory>/conf</outputDirectory>
             <includes>
-                <include>application.yml</include>
+                <include>config.yml</include>
                 <include>logback.xml</include>
                 <include>*.yml</include>
                 <include>public/**</include>
-                <include>mapper/**</include>
             </includes>
         </fileSet>
         <fileSet>
